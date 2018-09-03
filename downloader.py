@@ -1,24 +1,25 @@
-import urllib, os, sys
+import os
+import requests
 
-class downloader():
+
+class Downloader(object):
     def __init__(self, url, dir):
         self.url = url
         self.dir = dir
         self.filename = str(url.split("/")[-1])
 
-#       def dlProgress(count, blockSize, totalSize):
-#               percent = int(count*blockSize*100/totalSize)
-#               sys.stdout.write("\r" +"test" + "...%d%%" % percent)
-#               sys.stdout.flush()
-
     def down(self):
-        if os.path.exists(self.dir + "/" + self.filename):
+        dest_path = os.path.join(self.dir, self.filename)
+        if os.path.exists(dest_path):
             pass
         else:
-            try:
-                urllib.urlretrieve(self.url, self.dir + "/" + self.filename)
-            except:
-                print "\t [x] Error downloading " + self.url
+            r = requests.get(self.url, stream=True)
+            if r.status_code == requests.codes.ok:
+                with open(dest_path, 'wb') as f:
+                    for chunk in r:
+                        f.write(chunk)
+            else:
+                print("\t [x] Error downloading " + self.url)
                 self.filename = ""
 
     def name(self):

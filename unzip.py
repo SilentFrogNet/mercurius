@@ -24,11 +24,12 @@ import os
 import os.path
 import getopt
 
+
 class unzip:
-    def __init__(self, verbose = False, percent = 10):
+    def __init__(self, verbose=False, percent=10):
         self.verbose = False
         self.percent = percent
-        
+
     def extract(self, file, dir):
         if not dir.endswith(':') and not os.path.exists(dir):
             os.mkdir(dir)
@@ -47,10 +48,10 @@ class unzip:
         for i, name in enumerate(zf.namelist()):
 
             if self.verbose == True:
-                print "Extracting %s" % name
+                print("Extracting %s" % name)
             elif perc > 0 and (i % perc) == 0 and i > 0:
-                complete = int (i / perc) * percent
-                #print "%s%% complete" % complete
+                complete = int(i / perc) * percent
+                # print "%s%% complete" % complete
 
             if not name.endswith('/'):
                 outfile = open(os.path.join(dir, name), 'wb')
@@ -58,10 +59,8 @@ class unzip:
                 outfile.flush()
                 outfile.close()
 
-
     def _createstructure(self, file, dir):
         self._makedirs(self._listdirs(file), dir)
-
 
     def _makedirs(self, directories, basedir):
         """ Create any directories that don't currently exist """
@@ -69,7 +68,7 @@ class unzip:
             curdir = os.path.join(basedir, dir)
             if not os.path.exists(curdir):
                 os.mkdir(curdir)
-                #print("dir-->"+str(curdir))
+                # print("dir-->"+str(curdir))
 
     def _listdirs(self, file):
         """ Grabs all the directories in the zip structure
@@ -78,21 +77,22 @@ class unzip:
         zf = zipfile.ZipFile(file)
 
         dirs = []
-        #print str(zf.namelist())
+        # print str(zf.namelist())
 
         for name in zf.namelist():
             dirsname = name.split("/")
-            ant=""
+            ant = ""
             for dirname in dirsname[:-1]:
-				dirs.append(ant+dirname)
-				#print "anadiendo:"+(ant+dirname)
-				ant=ant+dirname+"/"
+                dirs.append(ant + dirname)
+                # print "anadiendo:"+(ant+dirname)
+                ant = ant + dirname + "/"
 
         dirs.sort()
         return dirs
 
+
 def usage():
-    print """usage: unzip.py -z <zipfile> -o <targetdir>
+    print("""usage: unzip.py -z <zipfile> -o <targetdir>
     <zipfile> is the source zipfile to extract
     <targetdir> is the target destination
 
@@ -105,8 +105,8 @@ def usage():
     --verbose
     --percent=10
     --zipfile=<zipfile>
-    --outdir=<targetdir>"""
-    
+    --outdir=<targetdir>""")
+
 
 def main():
     shortargs = 'vhp:z:o:'
@@ -140,7 +140,8 @@ def main():
     if zipsource == "" or zipdest == "":
         usage()
         sys.exit()
-            
+
     unzipper.extract(zipsource, zipdest)
+
 
 if __name__ == '__main__': main()

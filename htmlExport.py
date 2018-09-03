@@ -1,21 +1,22 @@
 from lib import markup
 from lib import graphs
 
+
 class htmlExport():
-    def __init__(self,users,softs,paths,allinfo,fname,dirs,failed,domain,emails):
-        self.users=users
-        self.softs=softs
-        self.paths=paths
-        self.allinfo=allinfo
-        self.fname=fname
-        self.dir=dirs
-        self.failed=failed
-        self.style=""
-        self.domain=domain
-        self.emails=emails
+    def __init__(self, users, softs, paths, allinfo, fname, dirs, failed, domain, emails):
+        self.users = users
+        self.softs = softs
+        self.paths = paths
+        self.allinfo = allinfo
+        self.fname = fname
+        self.dir = dirs
+        self.failed = failed
+        self.style = ""
+        self.domain = domain
+        self.emails = emails
 
     def styler(self):
-        a="""<style type='text/css'>body {
+        a = """<style type='text/css'>body {
      background: #e1e5e4  top no-repeat;
  }
 
@@ -76,7 +77,7 @@ max-height: 300px;
 }
 </style>
         """
-        self.style=a
+        self.style = a
 
     def writehtml(self):
         page = markup.page()
@@ -89,50 +90,50 @@ max-height: 300px;
         page.h2("Metagoofil results")
         page.h3("Results for: " + self.domain)
         graph = graphs.BarGraph('vBar')
-	try:
-        	graph.values = [len(self.users),len(self.softs),len(self.emails),len(self.paths)]
-		graph.labels = ["Usernames","Software","Emails","Paths/Servers"]
-		graph.showValues = 1
-        	page.body(graph.create())
-	except:
-		print "graph"
-	try:
-		page.h3("User names found:")
-		page.ul( class_="userslist")
-		page.li( self.users, class_="useritem")
-		page.ul.close( )
-		page.h3("Software versions found:")
-	except:
-		print "user"
         try:
-		page.ul( class_="softlist")
-		page.li(self.softs, class_="softitem")
-		page.ul.close( )
-	except:
-		print "email"
-	page.h3("E-mails found:")
-        if self.emails!=[]:
-            page.ul( class_="emailslist")
+            graph.values = [len(self.users), len(self.softs), len(self.emails), len(self.paths)]
+            graph.labels = ["Usernames", "Software", "Emails", "Paths/Servers"]
+            graph.showValues = 1
+            page.body(graph.create())
+        except:
+            print("graph")
+        try:
+            page.h3("User names found:")
+            page.ul(class_="userslist")
+            page.li(self.users, class_="useritem")
+            page.ul.close()
+            page.h3("Software versions found:")
+        except:
+            print("user")
+        try:
+            page.ul(class_="softlist")
+            page.li(self.softs, class_="softitem")
+            page.ul.close()
+        except:
+            print("email")
+        page.h3("E-mails found:")
+        if self.emails != []:
+            page.ul(class_="emailslist")
             page.li(self.emails, class_="emailitem")
-            page.ul.close( )
+            page.ul.close()
         else:
             page.p("0 results")
         page.h3("Servers and paths found:")
-        if self.paths!=[]:
-            page.ul( class_="pathslist")
+        if self.paths != []:
+            page.ul(class_="pathslist")
             page.li(self.paths, class_="pathitem")
-            page.ul.close( )
+            page.ul.close()
         else:
             page.p("0 results")
         page.h3("Files analyzed:")
-        page.ul( class_="files")
+        page.ul(class_="files")
         for x in self.allinfo:
             page.li(x[0], class_="file")
         page.ul.close()
         page.h2("Files and metadata found:")
         for x in self.allinfo:
             page.h3(x[0])
-            page.a("Local copy", class_="link", href=self.dir+"/"+x[0])
+            page.a("Local copy", class_="link", href=self.dir + "/" + x[0])
             page.pre(x[1])
             page.pre(x[2])
             page.pre(x[3])
@@ -143,12 +144,12 @@ max-height: 300px;
             page.pre(x)
         page.body.close()
         page.html.close()
-        file = open(self.fname,'w')
+        file = open(self.fname, 'w')
         for x in page.content:
             try:
                 file.write(x)
             except:
-                #print "Exception" +  x # send to logs
+                # print "Exception" +  x # send to logs
                 pass
-        file.close
+        file.close()
         return "ok"
