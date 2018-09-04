@@ -1,15 +1,16 @@
-import unzip
 import zipfile
-import sys
 import re
 import os
 import random
-import myparser
+from metagoofil2.core import myparser
+
+from .base_extractor import IBaseExtractor
 
 
-class MetaInfoMS:
+class MSOfficeXMLExtractor(IBaseExtractor):
 
     def __init__(self, filepath=None):
+        super(MSOfficeXMLExtractor, self).__init__()
         self.template = ""
         self.totalTime = ""
         self.pages = ""
@@ -288,7 +289,7 @@ class MetaInfoMS:
         except:
             pass
 
-    def getData(self):
+    def parse_data(self):
         return "ok"
 
     def getTexts(self):

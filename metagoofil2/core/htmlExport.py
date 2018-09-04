@@ -1,5 +1,4 @@
-from lib import markup
-from lib import graphs
+from metagoofil2.lib import markup, graphs
 
 
 class htmlExport():

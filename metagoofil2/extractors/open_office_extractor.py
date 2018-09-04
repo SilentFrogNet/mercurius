@@ -1,36 +1,14 @@
-import unzip
 import zipfile
-import sys
 import re
 import os
 import random
 
+from .base_extractor import IBaseExtractor
 
-class metaInfoOO:
-    def __init__(self):
-        self.version = ""
-        self.generator = ""
-        self.creationDate = ""
-        self.date = ""
-        self.language = ""
-        self.editingCycles = ""
-        self.editingDuration = ""
-        self.tableCount = ""
-        self.imageCount = ""
-        self.objectCount = ""
-        self.pageCount = ""
-        self.paragraphCount = ""
-        self.wordCount = ""
-        self.characterCount = ""
-        self.initialCreator = ""
-        self.creator = ""
-        self.title = ""
-        self.description = ""
-        self.subject = ""
-        self.printedBy = ""
-        self.printDate = ""
 
+class OpenOfficeExtractor(IBaseExtractor):
     def __init__(self, filepath):
+        super(OpenOfficeExtractor, self).__init__()
         self.version = ""
         self.generator = ""
         self.creationDate = ""
@@ -54,16 +32,12 @@ class metaInfoOO:
         self.printDate = ""
 
         rnd = str(random.randrange(0, 1001, 3))
-        zip = zipfile.ZipFile(filepath, 'r')
-        file('meta' + rnd + '.xml', 'w').write(zip.read('meta.xml'))
-        zip.close()
+        with zipfile.ZipFile(filepath, 'r') as zip:
+            open('meta' + rnd + '.xml', 'w').write(zip.read('meta.xml'))
 
-        # done, ahora a currar con el xml
-
-        f = open('meta' + rnd + '.xml', 'r')
-        meta = f.read()
-        self.carga(meta)
-        f.close()
+        with open('meta' + rnd + '.xml', 'r') as f:
+            meta = f.read()
+            self.carga(meta)
         os.remove('meta' + rnd + '.xml')
 
     def toString(self):

@@ -1,13 +1,11 @@
-from discovery.googlesearch import SearchGoogle
-from extractors import metadataExtractor, metadataMSOffice, metadataMSOfficeXML, metadataOpenOffice, metadataPDF
-import urllib.request, urllib.parse, urllib.error
+from metagoofil2.discovery.googlesearch import SearchGoogle
+from metagoofil2.extractors import metadataExtractor, metadataMSOffice, metadataMSOfficeXML, metadataPDF
 import os
-from downloader import Downloader
-import processor
+from metagoofil2.core.downloader import Downloader
+from metagoofil2.core import processor, htmlExport
 import sys
 import getopt
 import warnings
-import htmlExport
 
 warnings.filterwarnings("ignore")  # To prevent errors from hachoir deprecated functions, need to fix.
 
@@ -113,16 +111,16 @@ def doprocess(argv):
                             test = metadataMSOfficeXML.MetaInfoMS(os.path.join(dir, filename))
 
                         if testex:      # TODO: check
-                            testex.getData()
+                            testex.parse_data()
                             users = testex.getUsers()
                             paths = testex.getPaths()
 
-                        res = test.getData()
+                        res = test.parse_data()
                         if res == "ok":
                             raw = test.getRaw()
                             users = test.getUsers()
                             paths = test.getPaths()
-                            soft = test.getSoftware()
+                            soft = test.parse_software()
                             email = []
                             if filetype == "pdf" or filetype == "docx":
                                 res = test.getTexts()
@@ -159,15 +157,15 @@ def doprocess(argv):
                     test = metadataMSOfficeXML.MetaInfoMS(os.path.join(dir, filename))
                 else:
                     continue
-                res = test.getData()
+                res = test.parse_data()
                 if res == "ok":
                     raw = test.getRaw()
                     users = test.getUsers()
                     paths = test.getPaths()
-                    soft = test.getSoftware()
+                    soft = test.parse_software()
                     if (filetype == "doc" or filetype == "xls" or filetype == "ppt") and os.name == "posix":
                         testex.runExtract()
-                        testex.getData()
+                        testex.parse_data()
                         paths.extend(testex.getPaths())
                         respack = [filename, users, paths, soft, raw, email]
                         all.append(respack)

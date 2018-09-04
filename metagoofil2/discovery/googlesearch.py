@@ -1,7 +1,4 @@
-import string
-import http.client, sys
-import myparser
-import re
+from metagoofil2.core import myparser
 import time
 
 import requests
