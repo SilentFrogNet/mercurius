@@ -1,4 +1,5 @@
 import os
+import logging
 
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
@@ -11,10 +12,12 @@ from metagoofil2.core import myparser
 from metagoofil2.utils.logger import Logger, LogTypes
 from .base_extractor import IBaseExtractor
 
+logging.getLogger('pdfminer').setLevel(logging.ERROR)
+
 
 class PDFExtractor(IBaseExtractor):
 
-    def __init__(self, fname, password='', logger=None):
+    def __init__(self, fname, password=None, logger=None):
         super(PDFExtractor, self).__init__()
         self.fname = fname
         self.password = password
@@ -38,7 +41,7 @@ class PDFExtractor(IBaseExtractor):
         device.close()
         outfp.close()
         with open('temppdf.txt', 'rb') as infp:
-            self.content = infp.read()
+            self.content = infp.read().decode('utf-8')
         os.remove('temppdf.txt')
 
         mp = myparser.parser(self.content)
@@ -98,15 +101,15 @@ class PDFExtractor(IBaseExtractor):
 
         title = self.metadata.get('Title', None)
         if title:
-            self.misc.append(title.decode("utf-8"))
+            self.misc.append({'title': title.decode("utf-8")})
 
         vendor = self.metadata.get('Producer', None)
         if vendor:
-            self.misc.append(vendor.decode("utf-8"))
+            self.misc.append({'vendor': vendor.decode("utf-8")})
 
         creator = self.metadata.get('Creator', None)
         if creator:
-            self.misc.append(creator.decode("utf-8"))
+            self.misc.append({'creator': creator.decode("utf-8")})
 
     @staticmethod
     def _process_pdf(rsrcmgr, device, fp, pagenos=None, maxpages=0, password='', caching=True, check_extractable=True):

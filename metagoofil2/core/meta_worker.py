@@ -80,45 +80,35 @@ class MetaWorker(threading.Thread):
         return dest_path
 
     def _parse_file(self, path):
-        out = {
-            'file': path,
-            'users': [],
-            'emails': [],
-            'hosts': [],
-            'misc': [],
-            'metadata': "",
-            'content': ""
-        }
-
         working_dir = os.path.dirname(os.path.realpath(path))
         filename, filetype = os.path.splitext(os.path.basename(path))
+        filetype = filetype[1:]
 
-        out['working_dir'] = working_dir
-        out['filename'] = filename
-        out['filetype'] = filetype
+        out = {
+            'working_dir': working_dir,
+            'filename': filename,
+            'filetype': filetype
+        }
 
-        self.logger.info("Parsing file {}{}...".format(filename, filetype))
+        self.logger.info("Parsing file \"{}{}\"...".format(filename, filetype))
 
         metaparser = None
         if filetype == FileTypes.PDF:
             metaparser = PDFExtractor(path)
-        # if filetype in FileTypes.MS_OFFICE:
-        #     metaparser = MSOfficeExtractor(path)
+        if filetype in FileTypes.MS_OFFICE:
+            metaparser = MSOfficeExtractor(path)
         # if filetype in FileTypes.MS_OFFICE_XML:
         #     metaparser = MSOfficeXMLExtractor(path)
+        # if filetype in FileTypes.OPEN_OFFICE:
+        #     metaparser = OpenOfficeExtractor(path)
 
         if metaparser:
-            res = metaparser.parse_data()
-            if res:
-                out['metadata'] = metaparser.get_raw_metadata()
-                out['content'] = metaparser.get_content()
-                out['users'].extend(metaparser.get_users())
-                out['emails'].extend(metaparser.get_emails())
-                out['hosts'].extend(metaparser.get_hosts())
-                out['misc'].extend(metaparser.get_misc())
+            if metaparser.parse_data():
+                out.update(metaparser.get_recap())
+
+                self.logger.success("File \"{}{}\" parsed correctly".format(filename, filetype))
+                self.output_store.push(out)
             else:
                 self.logger.error("Error in the parsing {}{}:{}".format(filename, filetype, " ".join(metaparser.get_errors())))
-
-            self.output_store.push(out)
         else:
             self.logger.error("Unsupported file format for file {}{}".format(filename, filetype))

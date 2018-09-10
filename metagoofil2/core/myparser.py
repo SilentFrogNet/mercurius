@@ -8,7 +8,6 @@ class parser:
     def __init__(self, results, word=""):
         self.results = results
         self.word = word
-        self.temp = []
 
     def hostnames(self, domain=None):
         if domain is None:
@@ -78,9 +77,9 @@ class parser:
     def people_linkedin(self):
         reg_people = re.compile('">[a-zA-Z0-9._ -]* profiles | LinkedIn')
 
-        self.temp = reg_people.findall(self.results)
+        temp = reg_people.findall(self.results)
         resul = []
-        for x in self.temp:
+        for x in temp:
             y = x.replace('  LinkedIn', '')
             y = y.replace(' profiles ', '')
             y = y.replace('LinkedIn', '')
@@ -92,9 +91,9 @@ class parser:
 
     def profiles(self):
         reg_people = re.compile('">[a-zA-Z0-9._ -]* - <em>Google Profile</em>')
-        self.temp = reg_people.findall(self.results)
+        temp = reg_people.findall(self.results)
         resul = []
-        for x in self.temp:
+        for x in temp:
             y = x.replace(' <em>Google Profile</em>', '')
             y = y.replace('-', '')
             y = y.replace('">', '')

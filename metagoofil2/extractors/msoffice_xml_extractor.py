@@ -50,15 +50,15 @@ class MSOfficeXMLExtractor(IBaseExtractor):
             self.comments_filepath = os.path.join(working_dir, "comments{}.xml".format(rnd))
             self.shared_strings_filepath = os.path.join(working_dir, "shared_strings{}.xml".format(rnd))
 
-            with zipfile.ZipFile(filepath, 'r') as zip:
-                open(self.app_filepath, 'wb').write(zip.read('docProps/app.xml'))
-                open(self.core_filepath, 'wb').write(zip.read('docProps/core.xml'))
+            with zipfile.ZipFile(filepath, 'r') as z:
+                open(self.app_filepath, 'wb').write(z.read('docProps/app.xml'))
+                open(self.core_filepath, 'wb').write(z.read('docProps/core.xml'))
                 if file_extension == ".docx":
-                    self._extract_docx_xmls(zip)
+                    self._extract_docx_xmls(z)
                 elif file_extension == ".pptx":
-                    self._extract_pptx_xmls(zip)
+                    self._extract_pptx_xmls(z)
                 elif file_extension == ".xlsx":
-                    self._extract_xlsx_xmls(zip)
+                    self._extract_xlsx_xmls(z)
 
             # parse app info
             with open(self.app_filepath, 'rb') as f:
@@ -88,24 +88,24 @@ class MSOfficeXMLExtractor(IBaseExtractor):
             os.remove(self.docu_filepath)
             os.remove(self.shared_strings_filepath)
 
-    def _extract_docx_xmls(self, zip):
-        open(self.docu_filepath, 'wb').write(zip.read('word/document.xml'))
+    def _extract_docx_xmls(self, z):
+        open(self.docu_filepath, 'wb').write(z.read('word/document.xml'))
         try:
-            open(self.comments_filepath, 'wb').write(zip.read('word/comments.xml'))
+            open(self.comments_filepath, 'wb').write(z.read('word/comments.xml'))
             self.comments = True
         except:
             self.comments = False
 
-    def _extract_xlsx_xmls(self, zip):
-        for fxml in zip.filelist:
+    def _extract_xlsx_xmls(self, z):
+        for fxml in z.filelist:
             if fxml.filename.startswith('xl/worksheets'):
-                open(self.docu_filepath, 'ab').write(zip.read(fxml.filename))
-        open(self.shared_strings_filepath, 'wb').write(zip.read('xl/sharedStrings.xml'))
+                open(self.docu_filepath, 'ab').write(z.read(fxml.filename))
+        open(self.shared_strings_filepath, 'wb').write(z.read('xl/sharedStrings.xml'))
 
-    def _extract_pptx_xmls(self, zip):
-        for fxml in zip.filelist:
+    def _extract_pptx_xmls(self, z):
+        for fxml in z.filelist:
             if fxml.filename.startswith('pt/sildes'):
-                open(self.docu_filepath, 'ab').write(zip.read(fxml.filename))
+                open(self.docu_filepath, 'ab').write(z.read(fxml.filename))
 
     def toString(self):
         print("--- Metadata app ---")

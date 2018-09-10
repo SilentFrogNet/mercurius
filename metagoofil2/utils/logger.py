@@ -4,9 +4,10 @@ from termcolor import colored, cprint
 
 
 class LogTypes:
-    TO_FILE = 0
-    TO_SCREEN = 1
-    TO_COLORED_SCREEN = 2
+    NO_LOG = 0
+    TO_FILE = 1
+    TO_SCREEN = 2
+    TO_COLORED_SCREEN = 3
 
 
 class Logger:
@@ -15,7 +16,7 @@ class Logger:
     PREFIX_WARNING = "[!]"
     PREFIX_ERROR = "[-]"
 
-    def __init__(self, type=LogTypes.TO_FILE):
+    def __init__(self, type=LogTypes.NO_LOG):
         colorama_init()
 
         logging.basicConfig(level=logging.INFO)
@@ -27,7 +28,13 @@ class Logger:
                 and self.type != LogTypes.TO_COLORED_SCREEN:
             self.type = LogTypes.TO_FILE
 
+    def can_log(self):
+        return self.type != LogTypes.NO_LOG
+
     def info(self, text):
+        if self.type == LogTypes.NO_LOG:
+            return
+
         if self.type == LogTypes.TO_SCREEN:
             print(f"{self.PREFIX_INFO} {text}")
         elif self.type == LogTypes.TO_COLORED_SCREEN:
@@ -37,6 +44,9 @@ class Logger:
             self.logger.info(text)
 
     def success(self, text):
+        if self.type == LogTypes.NO_LOG:
+            return
+
         if self.type == LogTypes.TO_SCREEN:
             print(f"{self.PREFIX_SUCCESS} {text}")
         elif self.type == LogTypes.TO_COLORED_SCREEN:
@@ -46,6 +56,9 @@ class Logger:
             self.logger.info(text)
 
     def warning(self, text):
+        if self.type == LogTypes.NO_LOG:
+            return
+
         if self.type == LogTypes.TO_SCREEN:
             print(f"{self.PREFIX_WARNING} {text}")
         elif self.type == LogTypes.TO_COLORED_SCREEN:
@@ -55,6 +68,9 @@ class Logger:
             self.logger.warning(text)
 
     def error(self, text):
+        if self.type == LogTypes.NO_LOG:
+            return
+
         if self.type == LogTypes.TO_SCREEN:
             print(f"{self.PREFIX_ERROR} {text}")
         elif self.type == LogTypes.TO_COLORED_SCREEN:

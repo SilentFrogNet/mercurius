@@ -80,13 +80,13 @@ max-height: 300px;
 
     def writehtml(self):
         page = markup.page()
-        page.title("Metagoofil results")
+        page.title("Metagoofil2 results")
         page.html()
         self.styler()
         page.head(self.style)
         page.head.close()
         page.body()
-        page.h2("Metagoofil results")
+        page.h2("Metagoofil2 results")
         page.h3("Results for: " + self.domain)
         graph = graphs.BarGraph('vBar')
         try:

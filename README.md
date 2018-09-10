@@ -10,7 +10,9 @@ Started as a fork of Christian Martorella's Metagoofil it has been completely re
 ## Difference From original (Martorella's version)
 
   * Ported to Python 3.
-  * Changed discovery modeule to use googlesearch library instead of http.client
+  * Changed discovery module to use googlesearch library instead of http.client
+  * Added Exif Metadata extractor for images
+  * 
 
 
 ## What is this?
@@ -26,14 +28,15 @@ attacks (vpn, ftp, webapps), the tool will also extracts interesting emails, hos
 At the moment this tool supports:
   * Microsoft Office 97 documents (doc, xls, ppt)
   * Microsoft Office 2k+ documents (docx, xlsx, pptx)
-  * OpenOffice documents
+  * OpenOffice documents (odt, ods, odp)
   * PDF (pdf)
-  * Images with Exif data (jpg, jpeg, png)
+  * Images with Exif data (jpg/jpeg, tiff)
 
 ## How it works?
 
 The tool first perform a query in Google requesting different filetypes that can have 
-useful metadata (pdf, doc, xls, ppt,...), then will download those documents to the disk and extracts the metadata of the file using specific libraries for parsing different file types (Hachoir, Pdfminer, etc)
+useful metadata (pdf, doc, xls, ppt,...), then will download those documents to the disk and 
+extracts the metadata of the file using specific libraries for parsing different file types (Hachoir, Pdfminer, etc)
 
 
 ## Dependencies:
@@ -41,17 +44,18 @@ useful metadata (pdf, doc, xls, ppt,...), then will download those documents to 
 All dependencies are excluded again, due to incompatibility with Python 3.
 
 It depends on:
-  * pdfminer.six
-  * hachoir3
-  * requests
+  * [**pdfminer.six**](https://github.com/pdfminer/pdfminer.six/)
+  * [**hachoir3**](https://pypi.org/project/hachoir3/)
+  * [**requests**](http://docs.python-requests.org/en/master/)
+  * [**click**](http://click.pocoo.org/6/)
 
 
-## Changelog 1.0:
-  - Changed/Fixed Google Search
-  - Fixed downloader
-  - Fixed/Enhanced page parser 
-  - Fixed metadataMSOfficeXML parser
-  - Fixed metadataPDF parser
-  - Removed external projects
-  - Added Image Exif metadata extractor
-  - Modified cli interface
+## Changelog 1.0.0:
+  - [x] Changed/Fixed Google Search
+  - [x] Fixed downloader
+  - [ ] Fixed/Enhanced page parser 
+  - [ ] Fixed metadataMSOfficeXML extractor
+  - [x] Fixed metadataPDF extractor
+  - [x] Removed external projects
+  - [ ] Added Image Exif metadata extractor
+  - [ ] Modified cli interface (use click)

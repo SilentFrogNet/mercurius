@@ -16,7 +16,7 @@ stop_workers = threading.Event()
 logger = Logger(type=LogTypes.TO_SCREEN)
 
 
-class Metagoofil:
+class Metagoofil2:
 
     def __init__(self, domain, file_types, save_directory, delay=30, url_timeout=15, search_max=100, download_file_limit=100, number_of_threads=8, quiet=False, local=False):
         self.domain = domain
@@ -57,8 +57,31 @@ class Metagoofil:
         if self.output_store.empty():
             logger.warning("No metadata found in files")
         else:
+            all_users = []
+            all_emails = []
+            all_hosts = []
             for item in self.output_store.items():
-                pprint(item)
+                all_users.extend(item.get('users'))
+                all_emails.extend(item.get('emails'))
+                all_hosts.extend(item.get('hosts'))
+
+            all_users = list(set(all_users))
+            all_emails = list(set(all_emails))
+            all_hosts = list(set(all_hosts))
+
+            print("\n\n")
+            print("--- USERS -----------------------")
+            for u in all_users:
+                print(f"  * {u}")
+            print("\n")
+            print("--- EMAILS ----------------------")
+            for e in all_emails:
+                print(f"  * {e}")
+            print("\n")
+            print("--- HOSTS -----------------------")
+            for h in all_hosts:
+                print(f"  * {h}")
+            print("\n")
 
     def local_go(self):
         logger.info("Starting local search...")
@@ -67,10 +90,11 @@ class Metagoofil:
             logger.error("No directory specified. Abort!")
             return
 
-        print_string = "Analyzing local files..."
-        stop_spinner = threading.Event()
-        spin_thread = Spinner(stop_spinner, prefix=print_string)
-        spin_thread.start()
+        if not logger.can_log():
+            print_string = "Analyzing local files..."
+            stop_spinner = threading.Event()
+            spin_thread = Spinner(stop_spinner, prefix=print_string)
+            spin_thread.start()
 
         working_dir = os.path.realpath(self.save_directory)
         for file in os.listdir(working_dir):
@@ -84,8 +108,10 @@ class Metagoofil:
         import time
         time.sleep(3)
 
-        stop_spinner.set()
-        spin_thread.join()
+        if not logger.can_log():
+            stop_spinner.set()
+            spin_thread.join()
+
         logger.success(print_string + "DONE")
 
     def remote_go(self):
@@ -161,11 +187,10 @@ def banner():
                  "*   / /\/\ \  __/ || (_| | (_| | (_) | (_) |  _| | |     / /_    *\n" \
                  "*   \/    \/\___|\__\__,_|\__, |\___/ \___/|_| |_|_|    |____|   *\n" \
                  "*                         |___/                                  *\n" \
-                 "* Metagoofil 2  v1.0                                             *\n" \
-                 "* Fork of Christian Martorella's Metagoofil                      *\n" \
+                 "* Metagoofil2 2  v1.0                                             *\n" \
                  "* Ilario Dal Grande                                              *\n" \
                  "* SilentFrog.net                                                 *\n" \
-                 "* ilario.dalgrande_at_silentfrog.net                             *\n" \
+                 "* ilario.dalgrande@silentfrog.net                                *\n" \
                  "******************************************************************\n"
     print(banner_str)
 
@@ -173,7 +198,7 @@ def banner():
 if __name__ == '__main__':
     banner()
 
-    parser = argparse.ArgumentParser(description='Metagoofil - Search and download specific filtypes')
+    parser = argparse.ArgumentParser(description='Metagoofil2 - Search and download specific filtypes')
     parser.add_argument('-d', dest='domain', action='store', required=True, help='Domain to search.')
     parser.add_argument('-e', dest='delay', action='store', type=float, default=30.0, help='Delay (in seconds) between searches.  If it\'s too small Google may block your IP, too big and your search may take a while.  DEFAULT: 30.0')
     parser.add_argument('-i', dest='url_timeout', action='store', type=int, default=15, help='Number of seconds to wait before timeout for unreachable/stale pages.  DEFAULT: 15')
@@ -205,7 +230,7 @@ if __name__ == '__main__':
         logger.error("Number of threads (-n) must be greater than 0")
         sys.exit()
 
-    mg = Metagoofil(**vars(args))
-    mg.go()
+    mg2 = Metagoofil2(**vars(args))
+    mg2.go()
 
     logger.success("Done!")

@@ -4,13 +4,14 @@ import abc
 class IBaseExtractor:
     __metaclass__ = abc.ABCMeta
 
-    metadata = ""
-    content = ""
-    users = []
-    emails = []
-    hosts = []
-    misc = []
-    errors = []
+    def __init__(self):
+        self.metadata = ""
+        self.content = ""
+        self.users = []
+        self.emails = []
+        self.hosts = []
+        self.misc = []
+        self.errors = []
 
     @abc.abstractmethod
     def parse_data(self):
@@ -36,3 +37,15 @@ class IBaseExtractor:
 
     def get_errors(self):
         return self.errors
+
+    def get_recap(self):
+        out = {
+            'users': self.users,
+            'emails': self.emails,
+            'hosts': self.hosts,
+            'misc': self.misc,
+            'metadata': self.metadata,
+            'content': self.content,
+            'errors': self.errors
+        }
+        return out
