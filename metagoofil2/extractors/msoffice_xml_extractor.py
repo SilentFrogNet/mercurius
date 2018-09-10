@@ -5,11 +5,12 @@ import random
 from metagoofil2.core import myparser
 
 from .base_extractor import IBaseExtractor
+from metagoofil2.utils.logger import Logger, LogTypes
 
 
 class MSOfficeXMLExtractor(IBaseExtractor):
 
-    def __init__(self, filepath=None):
+    def __init__(self, filename, logger=None):
         super(MSOfficeXMLExtractor, self).__init__()
         self.template = ""
         self.totalTime = ""
@@ -36,57 +37,62 @@ class MSOfficeXMLExtractor(IBaseExtractor):
         self.createdDate = ""
         self.modifiedDate = ""
 
-        if filepath is None:
-            self.userscomments = ""
-            self.comments = True
-            self.text = ""
+        self.filename = filename
+        if logger:
+            self.logger = logger
         else:
-            rnd = str(random.randrange(0, 1001, 3))
-            working_dir = os.path.dirname(os.path.realpath(filepath))
-            filename, file_extension = os.path.splitext(os.path.basename(filepath))
-            self.app_filepath = os.path.join(working_dir, "app{}.xml".format(rnd))
-            self.core_filepath = os.path.join(working_dir, "core{}.xml".format(rnd))
-            self.docu_filepath = os.path.join(working_dir, "docu{}.xml".format(rnd))
-            self.comments_filepath = os.path.join(working_dir, "comments{}.xml".format(rnd))
-            self.shared_strings_filepath = os.path.join(working_dir, "shared_strings{}.xml".format(rnd))
+            self.logger = Logger(type=LogTypes.TO_SCREEN)
+        self.docu_filepath = None
+        self.comments_filepath = None
+        self.shared_strings_filepath = None
 
-            with zipfile.ZipFile(filepath, 'r') as z:
-                open(self.app_filepath, 'wb').write(z.read('docProps/app.xml'))
-                open(self.core_filepath, 'wb').write(z.read('docProps/core.xml'))
-                if file_extension == ".docx":
-                    self._extract_docx_xmls(z)
-                elif file_extension == ".pptx":
-                    self._extract_pptx_xmls(z)
-                elif file_extension == ".xlsx":
-                    self._extract_xlsx_xmls(z)
+    def parse_data(self):
+        rnd = str(random.randrange(0, 1001, 3))
+        working_dir = os.path.dirname(os.path.realpath(self.filename))
+        filename, file_extension = os.path.splitext(os.path.basename(self.filename))
+        app_filepath = os.path.join(working_dir, "app{}.xml".format(rnd))
+        core_filepath = os.path.join(working_dir, "core{}.xml".format(rnd))
+        self.docu_filepath = os.path.join(working_dir, "docu{}.xml".format(rnd))
+        self.comments_filepath = os.path.join(working_dir, "comments{}.xml".format(rnd))
+        self.shared_strings_filepath = os.path.join(working_dir, "shared_strings{}.xml".format(rnd))
 
-            # parse app info
-            with open(self.app_filepath, 'rb') as f:
-                app = f.read()
-                self.parse_app(app)
+        with zipfile.ZipFile(self.filename, 'r') as z:
+            open(app_filepath, 'wb').write(z.read('docProps/app.xml'))
+            open(core_filepath, 'wb').write(z.read('docProps/core.xml'))
+            if file_extension == ".docx":
+                self._extract_docx_xmls(z)
+            elif file_extension == ".pptx":
+                self._extract_pptx_xmls(z)
+            elif file_extension == ".xlsx":
+                self._extract_xlsx_xmls(z)
 
-            # parse comments
-            if self.comments:
-                with open(self.comments_filepath, 'rb') as f:
-                    comm = f.read()
-                    self.parse_comments(comm)
+        # parse app info
+        with open(app_filepath, 'rb') as f:
+            app = f.read()
+            self.parse_app(app)
 
-            # parse document content
-            with open(self.docu_filepath, 'rb') as f:
-                docu = f.read()
-                self.text = docu
+        # parse comments
+        if self.comments:
+            with open(self.comments_filepath, 'rb') as f:
+                comm = f.read()
+                self.parse_comments(comm)
 
-            # parse core info
-            with open(self.core_filepath, 'rb') as f:
-                core = f.read()
-                self.parse_core(core)
+        # parse document content
+        with open(self.docu_filepath, 'rb') as f:
+            docu = f.read()
+            self.text = docu
 
-            # Remove temporary files
-            os.remove(self.app_filepath)
-            os.remove(self.core_filepath)
-            os.remove(self.comments_filepath)
-            os.remove(self.docu_filepath)
-            os.remove(self.shared_strings_filepath)
+        # parse core info
+        with open(core_filepath, 'rb') as f:
+            core = f.read()
+            self.parse_core(core)
+
+        # Remove temporary files
+        os.remove(app_filepath)
+        os.remove(core_filepath)
+        os.remove(self.comments_filepath)
+        os.remove(self.docu_filepath)
+        os.remove(self.shared_strings_filepath)
 
     def _extract_docx_xmls(self, z):
         open(self.docu_filepath, 'wb').write(z.read('word/document.xml'))
@@ -288,9 +294,6 @@ class MSOfficeXMLExtractor(IBaseExtractor):
             self.modifiedDate = str(p.findall(data)[0])
         except:
             pass
-
-    def parse_data(self):
-        return "ok"
 
     def getTexts(self):
         return "ok"

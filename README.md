@@ -1,6 +1,7 @@
+[![GitHub tag](https://img.shields.io/github/tag/SilentFrogNet/metagoofil2.svg?label=version)](https://github.com/SilentFrogNet/metagoofil2/releases)
+[![GitHub license](https://img.shields.io/github/license/SilentFrogNet/metagoofil2.svg)](https://github.com/SilentFrogNet/metagoofil2/blob/master/LICENSE)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/metagoofil2)
-[![GitHub version](https://badge.fury.io/gh/SilentFrogNet%2Fmetagoofil2.svg)](https://badge.fury.io/gh/SilentFrogNet%2Fmetagoofil2)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](metagoofil2/LICENSES)
+[![GitHub issues](https://img.shields.io/github/issues/SilentFrogNet/metagoofil2.svg?colorB=yellow)](https://github.com/SilentFrogNet/metagoofil2/issues)
 
 
 # Metagoofil 2
@@ -48,6 +49,7 @@ It depends on:
   * [**hachoir3**](https://pypi.org/project/hachoir3/)
   * [**requests**](http://docs.python-requests.org/en/master/)
   * [**click**](http://click.pocoo.org/6/)
+  * [**spinner**](https://github.com/SilentFrogNet/spinner)
 
 
 ## Changelog 1.0.0:
@@ -55,7 +57,7 @@ It depends on:
   - [x] Fixed downloader
   - [ ] Fixed/Enhanced page parser 
   - [ ] Fixed metadataMSOfficeXML extractor
+  - [x] Added Image Exif metadata extractor
   - [x] Fixed metadataPDF extractor
   - [x] Removed external projects
-  - [ ] Added Image Exif metadata extractor
   - [ ] Modified cli interface (use click)

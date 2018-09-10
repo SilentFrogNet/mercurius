@@ -49,3 +49,7 @@ class IBaseExtractor:
             'errors': self.errors
         }
         return out
+
+    @staticmethod
+    def get_unique(lst):
+        return list(set(lst))

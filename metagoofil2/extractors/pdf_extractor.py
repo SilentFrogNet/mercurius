@@ -46,9 +46,9 @@ class PDFExtractor(IBaseExtractor):
 
         mp = myparser.parser(self.content)
         self.emails.extend(mp.emails())
-        self.emails = list(set(self.emails))
+        self.emails = self.get_unique(self.emails)
         self.hosts.extend(mp.hostnames_all())
-        self.hosts = list(set(self.hosts))
+        self.hosts = self.get_unique(self.hosts)
 
     def parse_data(self):
         with open(self.fname, 'rb') as fp:
@@ -84,9 +84,7 @@ class PDFExtractor(IBaseExtractor):
             metatext += v.decode("utf-8") + " "
         self.parser = myparser.parser(metatext)
         self.emails.extend(self.parser.emails())
-        self.emails = list(set(self.emails))
         self.hosts.extend(self.parser.hostnames_all())
-        self.hosts = list(set(self.hosts))
 
         self._parse_content()
 

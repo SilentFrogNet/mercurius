@@ -1,13 +1,12 @@
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
-from hachoir.core import config as HachoirConfig
-from hachoir.core.i18n import getTerminalCharset
+from hachoir.core import config as hachoir_config
 from addict import Dict
-from metagoofil2.core import myparser
-from metagoofil2.utils.logger import Logger, LogTypes
-from .base_extractor import IBaseExtractor
 
-HachoirConfig.quiet = True
+from .base_extractor import IBaseExtractor
+from metagoofil2.utils.logger import Logger, LogTypes
+
+hachoir_config.quiet = True
 
 
 class MSOfficeExtractor(IBaseExtractor):
@@ -45,19 +44,22 @@ class MSOfficeExtractor(IBaseExtractor):
         return father
 
     def parse_data(self):
+        if self.metadata:
+            return self.metadata
+
         filename, realname = str(self.filename), self.filename
         try:
             parser = createParser(filename, realname)
         except Exception as e:
             self.logger.error(str(e))
             self.errors.append(str(e))
-            return False
+            return None
         try:
             metadata = extractMetadata(parser)
         except Exception as e:
             self.logger.error(str(e))
             self.errors.append(str(e))
-            return False
+            return None
 
         if metadata:
             metalist = metadata.exportPlaintext()
@@ -72,4 +74,4 @@ class MSOfficeExtractor(IBaseExtractor):
                     self.users.append(v)
                 elif k in ["Producer", "MIME type", "Endianness"]:
                     self.misc.append({k: v})
-        return True
+        return self.metadata

@@ -6,7 +6,7 @@ import random
 
 from metagoofil2.utils.logger import Logger, LogTypes
 from metagoofil2.utils.file_types import FileTypes
-from metagoofil2.extractors import MSOfficeExtractor, MSOfficeXMLExtractor, OpenOfficeExtractor, PDFExtractor
+from metagoofil2.extractors import MSOfficeExtractor, MSOfficeXMLExtractor, OpenOfficeExtractor, PDFExtractor, ImageExtractor
 
 
 class MetaWorker(threading.Thread):
@@ -101,6 +101,8 @@ class MetaWorker(threading.Thread):
         #     metaparser = MSOfficeXMLExtractor(path)
         # if filetype in FileTypes.OPEN_OFFICE:
         #     metaparser = OpenOfficeExtractor(path)
+        if filetype in FileTypes.IMAGES:
+            metaparser = ImageExtractor(path)
 
         if metaparser:
             if metaparser.parse_data():
