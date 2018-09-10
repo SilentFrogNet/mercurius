@@ -13,7 +13,6 @@ Started as a fork of Christian Martorella's Metagoofil it has been completely re
   * Ported to Python 3.
   * Changed discovery module to use googlesearch library instead of http.client
   * Added Exif Metadata extractor for images
-  * 
 
 
 ## What is this?
