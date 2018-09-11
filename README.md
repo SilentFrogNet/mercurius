@@ -3,6 +3,10 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/metagoofil2)
 [![GitHub issues](https://img.shields.io/github/issues/SilentFrogNet/metagoofil2.svg?colorB=yellow)](https://github.com/SilentFrogNet/metagoofil2/issues)
 
+###################
+# STILL A WORK IN PROGRESS... 
+###################
+
 
 # Metagoofil 2
 
