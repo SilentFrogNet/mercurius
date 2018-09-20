@@ -46,9 +46,9 @@ class PDFExtractor(IBaseExtractor):
 
         mp = myparser.parser(self.content)
         self.emails.extend(mp.emails())
-        self.emails = self.get_unique(self.emails)
+        self.emails = self.unique(self.emails)
         self.hosts.extend(mp.hostnames_all())
-        self.hosts = self.get_unique(self.hosts)
+        self.hosts = self.unique(self.hosts)
 
     def parse_data(self):
         with open(self.fname, 'rb') as fp:

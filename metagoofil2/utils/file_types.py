@@ -21,3 +21,7 @@ class FileTypes:
     MS_OFFICE_XML = [DOCX, XLSX, PPTX]
     OPEN_OFFICE = [ODT, ODS, ODP]
     IMAGES = [JPG, JPEG, TIFF]
+
+    @classmethod
+    def to_string(cls):
+        return ", ".join([cls.PDF] + cls.MS_OFFICE + cls.MS_OFFICE_XML + cls.OPEN_OFFICE + cls.IMAGES)

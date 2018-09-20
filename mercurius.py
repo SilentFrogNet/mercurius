@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import argparse
@@ -6,22 +8,22 @@ import random
 import googlesearch
 import queue
 
-from pprint import pprint
 from spinner import Spinner
 from metagoofil2.utils.logger import Logger, LogTypes
 from metagoofil2.core.meta_worker import MetaWorker
 from metagoofil2.utils.item_store import ItemStore
+from metagoofil2.utils.file_types import FileTypes
 
 stop_workers = threading.Event()
-logger = Logger(type=LogTypes.TO_SCREEN)
+logger = Logger(type=LogTypes.TO_COLORED_SCREEN)
 
 
-class Metagoofil2:
+class Mercurius:
 
-    def __init__(self, domain, file_types, save_directory, delay=30, url_timeout=15, search_max=100, download_file_limit=100, number_of_threads=8, quiet=False, local=False):
+    def __init__(self, domain, file_types, out_directory, delay=30, url_timeout=15, search_max=100, download_file_limit=100, number_of_threads=8, quiet=False, local=False):
         self.domain = domain
         self.file_types = file_types
-        self.save_directory = save_directory
+        self.out_directory = out_directory
         self.delay = delay
         self.url_timeout = url_timeout
         self.search_max = search_max
@@ -71,32 +73,43 @@ class Metagoofil2:
 
             print("\n\n")
             print("--- USERS -----------------------")
-            for u in all_users:
-                print(f"  * {u}")
+            if all_users:
+                for u in all_users:
+                    print(f"  * {u}")
+            else:
+                logger.warning("No users found")
             print("\n")
             print("--- EMAILS ----------------------")
-            for e in all_emails:
-                print(f"  * {e}")
+            if all_emails:
+                for e in all_emails:
+                    print(f"  * {e}")
+            else:
+                logger.warning("No emails found")
             print("\n")
             print("--- HOSTS -----------------------")
-            for h in all_hosts:
-                print(f"  * {h}")
+            if all_emails:
+                for h in all_hosts:
+                    print(f"  * {h}")
+            else:
+                logger.warning("No hosts found")
             print("\n")
 
     def local_go(self):
         logger.info("Starting local search...")
 
-        if self.save_directory is None:
+        if self.out_directory is None:
             logger.error("No directory specified. Abort!")
             return
 
+        print_string = "Analyzing local files..."
+        stop_spinner = None
+        spin_thread = None
         if not logger.can_log():
-            print_string = "Analyzing local files..."
             stop_spinner = threading.Event()
             spin_thread = Spinner(stop_spinner, prefix=print_string)
             spin_thread.start()
 
-        working_dir = os.path.realpath(self.save_directory)
+        working_dir = os.path.realpath(self.out_directory)
         for file in os.listdir(working_dir):
             self.input_queue.put(os.path.join(working_dir, file))
 
@@ -105,10 +118,7 @@ class Metagoofil2:
         for w in self.workers:
             w.join()
 
-        import time
-        time.sleep(3)
-
-        if not logger.can_log():
+        if not logger.can_log() and stop_spinner is not None and spin_thread is not None:
             stop_spinner.set()
             spin_thread.join()
 
@@ -159,8 +169,6 @@ class Metagoofil2:
                 for w in self.workers:
                     w.join()
 
-                # self.output_queue.join()
-
                 stop_spinner.set()
                 spin_thread.join()
                 logger.success(print_string + "DONE")
@@ -181,56 +189,81 @@ def csv_list(string):
 
 def banner():
     banner_str = "\n" \
-                 "******************************************************************\n" \
-                 "*     /\/\   ___| |_ __ _  __ _  ___   ___  / _(_) |   |__  \    *\n" \
-                 "*    /    \ / _ \ __/ _` |/ _` |/ _ \ / _ \| |_| | |      ) |    *\n" \
-                 "*   / /\/\ \  __/ || (_| | (_| | (_) | (_) |  _| | |     / /_    *\n" \
-                 "*   \/    \/\___|\__\__,_|\__, |\___/ \___/|_| |_|_|    |____|   *\n" \
-                 "*                         |___/                                  *\n" \
-                 "* Metagoofil2 2  v1.0                                             *\n" \
-                 "* Ilario Dal Grande                                              *\n" \
-                 "* SilentFrog.net                                                 *\n" \
-                 "* ilario.dalgrande@silentfrog.net                                *\n" \
-                 "******************************************************************\n"
+                 "*********************************************************\n" \
+                 "*      _    _                          _                *\n" \
+                 "*     |  \/  |                        (_)               *\n" \
+                 "*     | .  . | ___ _ __ ___ _   _ _ __ _ _   _ ___      *\n" \
+                 "*     | |\/| |/ _ \ '__/ __| | | | '__| | | | / __|     *\n" \
+                 "*     | |  | |  __/ | | (__| |_| | |  | | |_| \__ \     *\n" \
+                 "*     \_|  |_/\___|_|  \___|\__,_|_|  |_|\__,_|___/     *\n" \
+                 "*                                                       *\n" \
+                 "* Mercurius  v1.0.0                                     *\n" \
+                 "* Ilario Dal Grande                                     *\n" \
+                 "* http://silentfrog.net                                 *\n" \
+                 "* ilario.dalgrande@silentfrog.net                       *\n" \
+                 "*********************************************************\n"
+
     print(banner_str)
 
+
+DEFAULT_DELAY = 30.0
+DEFAULT_URL_TIMEOUT = 15
+DEFAULT_SEARCH_MAX = 100
+DEFAULT_DOWNLOAD_FILE_LIMIT = 100
+DEFAULT_NUM_OF_THREADS = 8
 
 if __name__ == '__main__':
     banner()
 
-    parser = argparse.ArgumentParser(description='Metagoofil2 - Search and download specific filtypes')
-    parser.add_argument('-d', dest='domain', action='store', required=True, help='Domain to search.')
-    parser.add_argument('-e', dest='delay', action='store', type=float, default=30.0, help='Delay (in seconds) between searches.  If it\'s too small Google may block your IP, too big and your search may take a while.  DEFAULT: 30.0')
-    parser.add_argument('-i', dest='url_timeout', action='store', type=int, default=15, help='Number of seconds to wait before timeout for unreachable/stale pages.  DEFAULT: 15')
-    parser.add_argument('-s', dest='search_max', action='store', type=int, default=100, help='Maximum results to search.  DEFAULT: 100')
-    parser.add_argument('-n', dest='download_file_limit', default=100, action='store', type=int, help='Maximum number of files to download per filetype.  DEFAULT: 100')
-    parser.add_argument('-o', dest='save_directory', action='store', help='Directory to save downloaded files.  DEFAULT is cwd, "."')
-    parser.add_argument('-r', dest='number_of_threads', action='store', type=int, default=8, help='Number of search threads.  DEFAULT: 8')
-    parser.add_argument('-t', dest='file_types', action='store', required=True, type=csv_list, help='file_types to download (pdf,doc,xls,ppt,odp,ods,docx,xlsx,pptx).')
+    parser = argparse.ArgumentParser(description='Mercurius - Search and download files from a target domain and extract metadata')
+    parser.add_argument('-d', dest='domain', action='store', help='Domain to search.')
+    parser.add_argument('-t', dest='file_types', action='store', type=csv_list, help=f"File types to download ({FileTypes.to_string()}).")
+    parser.add_argument('-e', dest='delay', action='store', type=float, default=DEFAULT_DELAY, help=f"Delay (in seconds) between searches.  If it\'s too small Google may block your IP, too big and your search may take a while.  DEFAULT: {DEFAULT_DELAY}")
+    parser.add_argument('-i', dest='url_timeout', action='store', type=int, default=DEFAULT_URL_TIMEOUT, help=f"Number of seconds to wait before timeout for unreachable/stale pages.  DEFAULT: {DEFAULT_URL_TIMEOUT}")
+    parser.add_argument('-s', dest='search_max', action='store', type=int, default=DEFAULT_SEARCH_MAX, help=f"Maximum results to search.  DEFAULT: {DEFAULT_SEARCH_MAX}")
+    parser.add_argument('-n', dest='download_file_limit', default=DEFAULT_DOWNLOAD_FILE_LIMIT, action='store', type=int, help=f"Maximum number of files to download per filetype.  DEFAULT: {DEFAULT_DOWNLOAD_FILE_LIMIT}")
+    parser.add_argument('-o', dest='out_directory', action='store', help='Directory to save downloaded files.  DEFAULT is cwd, "."')
+    parser.add_argument('-r', dest='number_of_threads', action='store', type=int, default=DEFAULT_NUM_OF_THREADS, help=f"Number of search threads.  DEFAULT: {DEFAULT_NUM_OF_THREADS}")
     parser.add_argument('-q', dest='quiet', action='store_true', default=False, help='In quiet mode, it doesn\'t download the files, it\'ll just viewing search results.')
     parser.add_argument('-l', dest='local', action='store_true', default=False, help='Performs the metadata search on local files only.')
 
     args = parser.parse_args()
+    has_parsing_errors = False
 
-    if args.save_directory:
+    if not args.domain and not args.local:
+        logger.error("Missing mandatory parameter \"domain\" (-d)")
+        has_parsing_errors = True
+    if not args.file_types and not args.local:
+        logger.error("Missing mandatory parameter \"file_types\" (-t)")
+        has_parsing_errors = True
+    if args.out_directory:
         if not args.local:
-            logger.info("Downloaded files will be saved here: {0}".format(args.save_directory))
-            if not os.path.exists(args.save_directory):
-                logger.success("Creating folder: {0}".format(args.save_directory))
-                os.mkdir(args.save_directory)
+            logger.info(f"Downloaded files will be saved here: {args.out_directory}")
+            if not os.path.exists(args.out_directory):
+                logger.success(f"Creating folder: {args.out_directory}")
+                os.mkdir(args.out_directory)
         else:
-            logger.info("Files will be parsed from here: {0}".format(args.save_directory))
+            if not os.path.exists(args.out_directory):
+                logger.error(f"The \"out_directory\" parameter (\"{args.out_directory}\") is not a valid folder")
+                has_parsing_errors = True
+            else:
+                logger.info(f"Files will be parsed from here: {args.out_directory}")
+    else:
+        logger.error("Missing mandatory parameter \"out_directory\" (-o)")
+        has_parsing_errors = True
+
     if args.delay < 0:
-        logger.error("Delay must be greater than 0")
-        sys.exit()
+        logger.warning(f"Delay must be greater than 0. Set to default: {DEFAULT_DELAY}")
+        args.delay = DEFAULT_DELAY
     if args.url_timeout < 0:
-        logger.error("URL timeout (-i) must be greater than 0")
-        sys.exit()
+        logger.warning(f"URL timeout (-i) must be greater than 0. Set to default: {DEFAULT_URL_TIMEOUT}")
+        args.url_timeout = DEFAULT_URL_TIMEOUT
     if args.number_of_threads < 0:
-        logger.error("Number of threads (-n) must be greater than 0")
+        logger.warning(f"Number of threads (-n) must be greater than 0. Set to default: {DEFAULT_NUM_OF_THREADS}")
+        args.number_of_threads = DEFAULT_NUM_OF_THREADS
+
+    if has_parsing_errors:
         sys.exit()
 
-    mg2 = Metagoofil2(**vars(args))
+    mg2 = Mercurius(**vars(args))
     mg2.go()
-
-    logger.success("Done!")

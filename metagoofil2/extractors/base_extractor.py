@@ -51,5 +51,5 @@ class IBaseExtractor:
         return out
 
     @staticmethod
-    def get_unique(lst):
+    def unique(lst):
         return list(set(lst))
