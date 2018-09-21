@@ -2,8 +2,8 @@ from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
 from .base_extractor import IBaseExtractor
-from metagoofil2.utils.logger import Logger, LogTypes
-from metagoofil2.core import myparser
+from mercurius.utils.logger import Logger, LogTypes
+from mercurius.core import myparser
 
 
 class ImageExtractor(IBaseExtractor):

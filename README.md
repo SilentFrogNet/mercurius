@@ -1,7 +1,7 @@
-[![GitHub tag](https://img.shields.io/github/tag/SilentFrogNet/metagoofil2.svg?label=version)](https://github.com/SilentFrogNet/metagoofil2/releases)
-[![GitHub license](https://img.shields.io/github/license/SilentFrogNet/metagoofil2.svg)](https://github.com/SilentFrogNet/metagoofil2/blob/master/LICENSE)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/metagoofil2)
-[![GitHub issues](https://img.shields.io/github/issues/SilentFrogNet/metagoofil2.svg?colorB=yellow)](https://github.com/SilentFrogNet/metagoofil2/issues)
+[![GitHub tag](https://img.shields.io/github/tag/SilentFrogNet/mercurius.svg?label=version)](https://github.com/SilentFrogNet/mercurius/releases)
+[![GitHub license](https://img.shields.io/github/license/SilentFrogNet/mercurius.svg)](https://github.com/SilentFrogNet/mercurius/blob/master/LICENSE)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/mercurius)
+[![GitHub issues](https://img.shields.io/github/issues/SilentFrogNet/mercurius.svg?colorB=yellow)](https://github.com/SilentFrogNet/mercurius/issues)
 
 ###################
 # STILL A WORK IN PROGRESS... 
@@ -75,6 +75,12 @@ It depends on:
   * [x] Fixed metadataPDF extractor
   * [x] Removed external projects
   * [ ] Modified cli interface (use click)
+    * [ ] Manage context application
+        * [ ] keep track of already downloaded files
+        * [ ] keep domain context
+        * [ ] further searches on the same domain will extend data
+        * [ ] if domain is changed or local analysis is performed, ask to cleanup or extend 
+  * [ ] Ascii Art random banner like metasploit ;)
   * [ ] Other little fixes
 
 

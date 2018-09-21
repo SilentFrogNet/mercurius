@@ -1,8 +1,8 @@
-from metagoofil2.discovery.googlesearch import SearchGoogle
-from metagoofil2.extractors import metadataExtractor, metadataMSOffice, metadataMSOfficeXML, metadataPDF
+from mercurius.discovery.googlesearch import SearchGoogle
+from mercurius.extractors import metadataExtractor, metadataMSOffice, metadataMSOfficeXML, metadataPDF
 import os
-from metagoofil2.core.downloader import Downloader
-from metagoofil2.core import processor, htmlExport
+from mercurius.core.downloader import Downloader
+from mercurius.core import processor, htmlExport
 import sys
 import getopt
 import warnings

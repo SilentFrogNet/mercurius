@@ -1,4 +1,4 @@
-from metagoofil2.core import myparser
+from mercurius.core import myparser
 import time
 
 import requests

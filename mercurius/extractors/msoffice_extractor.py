@@ -4,7 +4,7 @@ from hachoir.core import config as hachoir_config
 from addict import Dict
 
 from .base_extractor import IBaseExtractor
-from metagoofil2.utils.logger import Logger, LogTypes
+from mercurius.utils.logger import Logger, LogTypes
 
 hachoir_config.quiet = True
 

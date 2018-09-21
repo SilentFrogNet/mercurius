@@ -1,4 +1,4 @@
-from metagoofil2.lib import markup, graphs
+from mercurius.lib import markup, graphs
 
 
 class htmlExport():

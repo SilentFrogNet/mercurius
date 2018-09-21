@@ -4,9 +4,9 @@ import threading
 import queue
 import random
 
-from metagoofil2.utils.logger import Logger, LogTypes
-from metagoofil2.utils.file_types import FileTypes
-from metagoofil2.extractors import MSOfficeExtractor, MSOfficeXMLExtractor, OpenOfficeExtractor, PDFExtractor, ImageExtractor
+from mercurius.utils.logger import Logger, LogTypes
+from mercurius.utils.file_types import FileTypes
+from mercurius.extractors import MSOfficeExtractor, MSOfficeXMLExtractor, OpenOfficeExtractor, PDFExtractor, ImageExtractor
 
 
 class MetaWorker(threading.Thread):

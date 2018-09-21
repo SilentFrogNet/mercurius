@@ -8,8 +8,8 @@ from pdfminer.pdftypes import resolve1
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
-from metagoofil2.core import myparser
-from metagoofil2.utils.logger import Logger, LogTypes
+from mercurius.core import myparser
+from mercurius.utils.logger import Logger, LogTypes
 from .base_extractor import IBaseExtractor
 
 logging.getLogger('pdfminer').setLevel(logging.ERROR)

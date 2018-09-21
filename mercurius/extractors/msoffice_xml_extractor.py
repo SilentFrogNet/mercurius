@@ -2,10 +2,10 @@ import zipfile
 import re
 import os
 import random
-from metagoofil2.core import myparser
+from mercurius.core import myparser
 
 from .base_extractor import IBaseExtractor
-from metagoofil2.utils.logger import Logger, LogTypes
+from mercurius.utils.logger import Logger, LogTypes
 
 
 class MSOfficeXMLExtractor(IBaseExtractor):
