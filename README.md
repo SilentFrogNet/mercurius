@@ -3,6 +3,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/mercurius)
 [![GitHub issues](https://img.shields.io/github/issues/SilentFrogNet/mercurius.svg?colorB=yellow)](https://github.com/SilentFrogNet/mercurius/issues)
 
+
 ###################
 # STILL A WORK IN PROGRESS... 
 ###################
