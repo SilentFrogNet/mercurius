@@ -11,10 +11,10 @@ class LogTypes:
 
 
 class Logger:
-    PREFIX_INFO = "[*]"
-    PREFIX_SUCCESS = "[+]"
-    PREFIX_WARNING = "[!]"
-    PREFIX_ERROR = "[-]"
+    PREFIX_INFO = "[*] Info:"
+    PREFIX_SUCCESS = "[+] Success:"
+    PREFIX_WARNING = "[!] Warning:"
+    PREFIX_ERROR = "[-] Error:"
 
     def __init__(self, type=LogTypes.NO_LOG):
         colorama_init()

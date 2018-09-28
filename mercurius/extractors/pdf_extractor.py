@@ -8,7 +8,8 @@ from pdfminer.pdftypes import resolve1
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
-from mercurius.core import myparser
+
+from mercurius.core.myparser import DataParser
 from mercurius.utils.logger import Logger, LogTypes
 from .base_extractor import IBaseExtractor
 
@@ -25,7 +26,7 @@ class PDFExtractor(IBaseExtractor):
             self.logger = logger
         else:
             self.logger = Logger(type=LogTypes.TO_SCREEN)
-        self.parser = None
+        self.parser = DataParser()
 
     def _parse_content(self):
         pagenos = set()
@@ -44,10 +45,9 @@ class PDFExtractor(IBaseExtractor):
             self.content = infp.read().decode('utf-8')
         os.remove('temppdf.txt')
 
-        mp = myparser.parser(self.content)
-        self.emails.extend(mp.emails())
+        self.emails.extend(self.parser.emails(self.content))
         self.emails = self.unique(self.emails)
-        self.hosts.extend(mp.hostnames_all())
+        self.hosts.extend(self.parser.hostnames_all(self.content))
         self.hosts = self.unique(self.hosts)
 
     def parse_data(self):
@@ -82,9 +82,8 @@ class PDFExtractor(IBaseExtractor):
         metatext = ""
         for v in self.metadata.values():
             metatext += v.decode("utf-8") + " "
-        self.parser = myparser.parser(metatext)
-        self.emails.extend(self.parser.emails())
-        self.hosts.extend(self.parser.hostnames_all())
+        self.emails.extend(self.parser.emails(metatext))
+        self.hosts.extend(self.parser.hostnames_all(metatext))
 
         self._parse_content()
 

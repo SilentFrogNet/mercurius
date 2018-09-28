@@ -69,6 +69,8 @@ It depends on:
 ## Changelog 1.0.0:
 
   * [x] Changed/Fixed Google Search
+  * [ ] Integrated [Bing Search](https://docs.microsoft.com/it-it/azure/cognitive-services/bing-web-search/quickstarts/python)
+  * [ ] Integrated Exalead Search (?????)
   * [x] Fixed downloader
   * [ ] Fixed/Enhanced page parser 
   * [ ] Fixed metadataMSOfficeXML extractor

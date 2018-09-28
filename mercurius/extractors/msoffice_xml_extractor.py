@@ -319,7 +319,7 @@ class MSOfficeXMLExtractor(IBaseExtractor):
         return temporal
 
     def getEmails(self):
-        res = myparser.parser(self.text)
+        res = myparser.DataParser(self.text)
         return res.emails()
 
     def getPaths(self):

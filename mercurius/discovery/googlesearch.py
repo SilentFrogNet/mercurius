@@ -32,15 +32,15 @@ class SearchGoogle:
         self.totalresults += self.results
 
     def get_emails(self):
-        rawres = myparser.parser(self.totalresults, self.word)
+        rawres = myparser.DataParser(self.totalresults, self.word)
         return rawres.emails()
 
     def get_hostnames(self):
-        rawres = myparser.parser(self.totalresults, self.word)
+        rawres = myparser.DataParser(self.totalresults, self.word)
         return rawres.hostnames()
 
     def get_files(self):
-        rawres = myparser.parser(self.totalresults, self.word)
+        rawres = myparser.DataParser(self.totalresults, self.word)
         return rawres.fileurls(self.filetype)
 
     def process_files(self):

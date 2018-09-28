@@ -22,6 +22,20 @@ class FileTypes:
     OPEN_OFFICE = [ODT, ODS, ODP]
     IMAGES = [JPG, JPEG, TIFF]
 
+    ALL = [PDF] + MS_OFFICE + MS_OFFICE_XML + OPEN_OFFICE + IMAGES
+
+    SPECIAL_GROUPS = {
+        "ALL": ALL,
+        "OFFICE": MS_OFFICE,
+        "XOFFICE": MS_OFFICE_XML,
+        "OPEN_OFFICE": OPEN_OFFICE,
+        "IMAGES": IMAGES
+    }
+
     @classmethod
     def to_string(cls):
-        return ", ".join([cls.PDF] + cls.MS_OFFICE + cls.MS_OFFICE_XML + cls.OPEN_OFFICE + cls.IMAGES)
+        return ", ".join(cls.ALL)
+
+    @classmethod
+    def special_groups(cls):
+        return ", ".join(cls.SPECIAL_GROUPS.keys())

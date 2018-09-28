@@ -87,12 +87,12 @@ class ImageExtractor(IBaseExtractor):
         artist = self.metadata.get('Artist', "").replace(u'\x00', '').strip()
         if artist:
             self.users.append(artist)
-            res = myparser.parser(artist)
+            res = myparser.DataParser(artist)
             self.emails.extend(res.emails())
         str_copy = self.metadata.get('Copyright', "").replace(u'\x00', '').strip()
         if str_copy:
             self.users.append(str_copy)
-            res = myparser.parser(str_copy)
+            res = myparser.DataParser(str_copy)
             self.emails.extend(res.emails())
         self.emails = self.unique(self.emails)
         taken = self.metadata.get('DateTime', "").strip()

@@ -6,6 +6,7 @@ import random
 
 from mercurius.utils.logger import Logger, LogTypes
 from mercurius.utils.file_types import FileTypes
+from mercurius.utils import pretty_size
 from mercurius.extractors import MSOfficeExtractor, MSOfficeXMLExtractor, OpenOfficeExtractor, PDFExtractor, ImageExtractor
 
 
@@ -49,7 +50,7 @@ class MetaWorker(threading.Thread):
     def _download_file(self, url):
         # Strip any trailing /'s before extracting file name.
         filename = str(url.strip('/').split('/')[-1])
-        dest_path = os.path.join(self.mg.save_directory, filename)
+        dest_path = os.path.join(self.mg.out_directory, filename)
 
         try:
             headers = {
@@ -64,7 +65,7 @@ class MetaWorker(threading.Thread):
                 except KeyError:
                     size = len(response.content)
 
-                self.logger.info("Downloading file - [{0} bytes] {1}".format(size, url))
+                self.logger.info(f"Downloading file - [{pretty_size(size)}] {url}")
 
                 with open(dest_path, "wb") as fh:
                     for chunk in response:
@@ -93,8 +94,8 @@ class MetaWorker(threading.Thread):
         self.logger.info("Parsing file \"{}.{}\"...".format(filename, filetype))
 
         metaparser = None
-        # if filetype == FileTypes.PDF:
-        #     metaparser = PDFExtractor(path)
+        if filetype == FileTypes.PDF:
+            metaparser = PDFExtractor(path)
         # if filetype in FileTypes.MS_OFFICE:
         #     metaparser = MSOfficeExtractor(path)
         # if filetype in FileTypes.MS_OFFICE_XML:
