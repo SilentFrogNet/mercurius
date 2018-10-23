@@ -1,0 +1,2 @@
+class NotSupportedFileFormat(Exception):
+    pass

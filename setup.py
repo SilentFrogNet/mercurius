@@ -1,31 +1,46 @@
 import setuptools
 
+SHORT_DESCRIPTION = "A tool to extract and manage medatada from remote domains or locally."
+
 with open("README.md", 'r') as f:
-    long_description = f.read()
+    LONG_DESCRIPTION = f.read()
 
 with open("VERSION", 'r') as f:
-    version = f.read().strip()
+    __version__ = f.read().strip()
 
 setuptools.setup(
     name="Mercurius",
-    description="A tool to extract and manage medatada from remote domains or locally.",
-    version=version,
+    version=__version__,
     author="Ilario Dal Grande",
     author_email="ilario.dalgrande@silentfrog.net",
-    long_description=long_description,
+    description=SHORT_DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
+    license='MIT',
     url="https://github.com/SilentFrogNet/mercurius",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        'Development Status :: 3 - Alpha',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'Operating System :: OS Independent',
+        'Environment :: Console',
+        'Topic :: Security',
+        'Topic :: Software Development :: User Interfaces',
+        'Topic :: Utilities',
+        'Topic :: System :: Shells',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3 :: Only'
     ],
     install_requires=[
-        'Click'
+        'Click',
+        'click-shell'
     ],
     entry_points='''
         [console_scripts]
-        merc=mercurius_click:cli
+        merc=mercurius:cli
     ''',
 )

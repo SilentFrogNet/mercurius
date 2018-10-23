@@ -1,3 +1,6 @@
+import os
+import sys
+
 from math import log2
 
 
@@ -9,6 +12,17 @@ def pretty_size(size):
     # format file size
     # (.4g results in rounded numbers for exact matches and max 3 decimals,
     # should never resort to exponent values)
-    diff = order-len(_suffixes)+1
-    order = order if diff <= 0 else len(_suffixes)-1
+    diff = order - len(_suffixes) + 1
+    order = order if diff <= 0 else len(_suffixes) - 1
     return '{:.2f} {}'.format(size / (1 << (order * 10)), _suffixes[order])
+
+
+def to_int(val, default=0):
+    try:
+        return int(val)
+    except ValueError:
+        return default
+
+
+def get_project_path():
+    return os.path.dirname(os.path.realpath(sys.argv[0]))

@@ -13,14 +13,11 @@
 Started as a fork of Christian Martorella's Metagoofil it has been completely refactored. 
 So now it's **_almost_** all new!
 
-## Difference From original (Martorella's version)
+## Origin of the Name
 
-  * Ported to Python 3.
-  * Changed discovery module to use googlesearch library instead of http.client
-  * Added Exif Metadata extractor for images
-  * Fixed MSOfficeXMLExtractor to work also with xlsx and pptx
-  * Refactored MyParser to extract more data
-  * Modernized a bit...
+The name **Mercurius** is inspired from the greek god Hermes. Among the others he is the god of _luck_, _trickery_ and _thieves_.
+
+He is also known as the "keeper of the boundaries" for his role as bridge between the upper and lower worlds. 
 
 
 ## What is this?
@@ -49,6 +46,16 @@ At the moment this tool can parse and extract metadata from:
   * Images with Exif data (jpg/jpeg, tiff)
 
 
+## Difference From original (Martorella's version)
+
+  * Ported to Python 3.
+  * Changed discovery module to use googlesearch library instead of http.client
+  * Added Exif Metadata extractor for images
+  * Fixed MSOfficeXMLExtractor to work also with xlsx and pptx
+  * Refactored MyParser to extract more data
+  * Modernized a bit...
+
+
 ## Dependencies:
 
 All dependencies are excluded again, due to incompatibility with Python 3.
@@ -66,6 +73,15 @@ It depends on:
   * [**addict**](https://github.com/mewwts/addict)
 
 
+## Working extractors:
+
+  * [x] PDFExtractor
+  * [x] ImageExtractor
+  * [x] MSOfficeExtractor
+  * [ ] MSOfficeXMLExtractor
+  * [ ] OpenOfficeExtractor
+
+
 ## Changelog 1.0.0:
 
   * [x] Changed/Fixed Google Search
@@ -77,35 +93,14 @@ It depends on:
   * [x] Added Image Exif metadata extractor
   * [x] Fixed metadataPDF extractor
   * [x] Removed external projects
-  * [ ] Modified cli interface (use click)
-    * [ ] Manage context application
+  * [x] Modified cli interface (use click)
+    * [x] Manage context application
         * [ ] keep track of already downloaded files
-        * [ ] keep domain context
+        * [x] keep domain context
         * [ ] further searches on the same domain will extend data
         * [ ] if domain is changed or local analysis is performed, ask to cleanup or extend 
-  * [ ] Ascii Art random banner like metasploit ;)
+  * [x] Ascii Art random banner like metasploit ;)
   * [ ] Other little fixes
-
-
-
----
-
-## Possible names
-
-Parole chiave usate nella ricerca: saggio, saggezza, segreto, ladro, 
-
-### Mitologia Norrena
-
- * KVASIR: Il più saggio tra gli dèi; nacque dagli sputi degli Asi e dei Vani, testimoniando con la sua esistenza la pace raggiunta tra le due famiglie divine; viene ucciso da Fialarr e Gallar che dal suo sangue ricaveranno il prezioso idromele della saggezza.
- * ALVIT: La "molto saggia"; appellativo della valchiria amata da Volund.
-
-### Mitologia Egizia
- * THOT: Dio della saggezza e della sapienza inventore della scrittura e patrono degli scribi e delle fasi lunari.
- 
-### Ladri 
- * CELEO: (in greco antico Κελεός) era un personaggio della mitologia greca, abitante dell'isola di Creta e famoso ladro ardito, di cui si raccontano le gesta.
- * **MERCURIO**: (Mercurius, nome latino del dio greco Hermes, Ερμής) è il protettore dell'eloquenza, del commercio e dei ladri, nella mitologia greca e romana. Essendo il messaggero degli dei viene spesso raffigurato con le ali ai piedi. Viene raffigurato come figlio di Giove e della pleiade Maia.
- * PASSALO: (conosciuto anche come Basala o Olo o Sillo), nella mitologia greca era uno dei due Cercopi. Figlio di Oceano e Tia, era insieme al fratello gemello Acmone uno dei più grandi imbroglioni, ladri e impostori della mitologia greca
- * ACMONE: (in greco antico Ἄsκμων) e conosciuto anche come Euribato o Triballo o Aclemone od Atlanto), nella mitologia greca era uno dei due Cercopi. Figlio di Oceano e Tia, era insieme al fratello gemello Passalo uno dei più grandi imbroglioni, ladri e impostori della mitologia greca 
- 
- 
+  * [ ] Does make it python-agnostic? (working both on python 2 and 3) with [**six**](https://github.com/benjaminp/six)
+  * [ ] Move all dependencies to setup.py file
+  * [x] Setup a plugin architecture for the extractors with [**pluggy**](https://github.com/pytest-dev/pluggy)

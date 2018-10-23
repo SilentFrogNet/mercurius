@@ -13,18 +13,18 @@ stop_workers = threading.Event()
 
 
 class Mercurius:
+    DEFAULT_DELAY = 30
+    DEFAULT_TIMEOUT = 15
+    DEFAULT_SEARCH_MAX = 100
+    DEFAULT_DOWNLOAD_LIMIT = 100
 
-    def __init__(self, domain, file_types, out_directory, number_of_threads=8, verbose=False, stealth=False, delay=30, url_timeout=15, search_max=100, download_file_limit=100, local=False, logger=None):
+    def __init__(self, configs, domain, file_types, out_directory, number_of_threads=8, verbose=False, stealth=False, logger=None):
+        self.configs = configs
         self.domain = domain
         self.file_types = file_types
         self.out_directory = out_directory
-        self.delay = delay
-        self.url_timeout = url_timeout
-        self.search_max = search_max
-        self.download_file_limit = download_file_limit
         self.verbose = verbose
         self.stealth = stealth
-        self.local = local
         if logger:
             self.logger = logger
         else:
@@ -50,16 +50,16 @@ class Mercurius:
         self.input_queue = queue.Queue()
         self.output_store = ItemStore()
 
-    def go(self):
+    def go(self, is_local, delay=DEFAULT_DELAY, url_timeout=DEFAULT_TIMEOUT, search_max=DEFAULT_SEARCH_MAX, download_file_limit=DEFAULT_DOWNLOAD_LIMIT):
         for i in range(self.number_of_threads):
-            w = MetaWorker(i, self.input_queue, self.output_store, stop_workers, self, logger=self.logger)
+            w = MetaWorker(i, self.input_queue, self.output_store, stop_workers, self, is_local=is_local, logger=self.logger)
             w.start()
             self.workers.append(w)
 
-        if self.local:
+        if is_local:
             self._local_go()
         else:
-            self._remote_go()
+            self._remote_go(delay, url_timeout, search_max, download_file_limit)
 
         self._collect_results()
 
@@ -97,7 +97,7 @@ class Mercurius:
 
             self.logger.success(print_string + "DONE")
 
-    def _remote_go(self):
+    def _remote_go(self, delay, url_timeout, search_max, download_file_limit):
         self.logger.info("Starting remote search...")
 
         for filetype in self.file_types:
@@ -108,7 +108,7 @@ class Mercurius:
             spin_thread = Spinner(stop_spinner, prefix=f"[*] Info: {print_string}")
             spin_thread.start()
 
-            self.files = self._get_docs_by_filetype(filetype)
+            self.files = self._get_docs_by_filetype(filetype, search_max)
 
             stop_spinner.set()
             spin_thread.join()
@@ -127,8 +127,8 @@ class Mercurius:
                 spin_thread.start()
 
                 # If it's not stealth mode download and analyze files
-                if len(self.files) > self.download_file_limit:
-                    self.files = self.files[:self.download_file_limit + 1]
+                if len(self.files) > download_file_limit:
+                    self.files = self.files[:download_file_limit + 1]
                 [self.input_queue.put(url) for url in self.files]
 
                 stop_spinner.set()
@@ -142,19 +142,20 @@ class Mercurius:
         stop_workers.set()
         for w in self.workers:
             w.join()
+        self.workers = []
 
-    def _get_docs_by_filetype(self, filetype):
+    def _get_docs_by_filetype(self, filetype, search_max):
         query = "filetype:{0} site:{1}".format(filetype, self.domain)
         user_agent = random.choice(self.random_user_agents)
 
         files = []
 
-        for url in googlesearch.search(query, start=0, stop=self.search_max, num=100, extra_params={'filter': '0'}, user_agent=user_agent):  # TODO: check if pause=self.delay is needed
+        for url in googlesearch.search(query, start=0, stop=search_max, num=100, extra_params={'filter': '0'}, user_agent=user_agent):  # TODO: check if pause=self.delay is needed
             files.append(url)
 
-        # Since googlesearch.search method retreives URLs in batches of 100, ensure the file list only contains the requested amount.
-        if len(files) > self.search_max:
-            files = files[:-(len(files) - self.search_max)]
+        # Since googlesearch.search method retrieves URLs in batches of 100, ensure the file list only contains the requested amount.
+        if len(files) > search_max:
+            files = files[:-(len(files) - search_max)]
 
         return files
 
@@ -163,9 +164,10 @@ class Mercurius:
             self.logger.warning("No metadata found in files")
         else:
             for item in self.output_store.items():
-                self.all_users.extend(item.get('users'))
-                self.all_emails.extend(item.get('emails'))
-                self.all_hosts.extend(item.get('hosts'))
+                for res in item.get('results', []):
+                    self.all_users.extend(res.get('users'))
+                    self.all_emails.extend(res.get('emails'))
+                    self.all_hosts.extend(res.get('hosts'))
 
             self.all_users = list(set(self.all_users))
             self.all_emails = list(set(self.all_emails))
