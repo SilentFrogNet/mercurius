@@ -9,49 +9,29 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 
-from mercurius.core.myparser import DataParser
-from mercurius.utils.logger import Logger, LogTypes
 from .base_extractor import IBaseExtractor
+from mercurius.core.myparser import DataParser
+from mercurius.utils.file_types import FileTypes
+from mercurius.loaders.extractor_loader import extractors_foo
 
 logging.getLogger('pdfminer').setLevel(logging.ERROR)
 
 
 class PDFExtractor(IBaseExtractor):
+    extractor_name = "PDFExtractor"
 
-    def __init__(self, fname, password=None, logger=None):
-        super(PDFExtractor, self).__init__()
-        self.fname = fname
-        self.password = password
-        if logger:
-            self.logger = logger
-        else:
-            self.logger = Logger(type=LogTypes.TO_SCREEN)
+    def __init__(self, logger=None):
+        super(PDFExtractor, self).__init__(logger)
         self.parser = DataParser()
 
-    def _parse_content(self):
-        pagenos = set()
-        maxpages = 0
-        codec = 'utf-8'
-        caching = True
-        laparams = LAParams()
-        rsrcmgr = PDFResourceManager(caching=caching)
-        outfp = open('temppdf.txt', 'w')
-        device = TextConverter(rsrcmgr, outfp, codec=codec, laparams=laparams)
-        with open(self.fname, 'rb') as fp:
-            self._process_pdf(rsrcmgr, device, fp, pagenos, maxpages=maxpages, password=self.password, caching=caching, check_extractable=True)
-        device.close()
-        outfp.close()
-        with open('temppdf.txt', 'rb') as infp:
-            self.content = infp.read().decode('utf-8')
-        os.remove('temppdf.txt')
+    @extractors_foo
+    def parse_data(self, path, filetype, **kwargs):
+        self.filename = path
 
-        self.emails.extend(self.parser.emails(self.content))
-        self.emails = self.unique(self.emails)
-        self.hosts.extend(self.parser.hostnames_all(self.content))
-        self.hosts = self.unique(self.hosts)
+        if not filetype == FileTypes.PDF:
+            return None
 
-    def parse_data(self):
-        with open(self.fname, 'rb') as fp:
+        with open(self.filename, 'rb') as fp:
             parser = PDFParser(fp)
             doc = PDFDocument(parser)
             parser.close()
@@ -67,14 +47,38 @@ class PDFExtractor(IBaseExtractor):
                     break
                 if not self.metadata:
                     self.errors.append('No metadata found')
-                    return False
+                    return None
                 else:
                     self._parse_data()
-                    return True
             except Exception as e:
                 self.logger.error(str(e))
                 self.errors.append(str(e))
-                return False
+                return None
+            return self
+        else:
+            return None
+
+    def _parse_content(self):
+        pagenos = set()
+        maxpages = 0
+        codec = 'utf-8'
+        caching = True
+        laparams = LAParams()
+        rsrcmgr = PDFResourceManager(caching=caching)
+        outfp = open('temppdf.txt', 'w')
+        device = TextConverter(rsrcmgr, outfp, codec=codec, laparams=laparams)
+        with open(self.filename, 'rb') as fp:
+            self._process_pdf(rsrcmgr, device, fp, pagenos, maxpages=maxpages, caching=caching, check_extractable=True)
+        device.close()
+        outfp.close()
+        with open('temppdf.txt', 'rb') as infp:
+            self.content = infp.read().decode('utf-8')
+        os.remove('temppdf.txt')
+
+        self.emails.extend(self.parser.emails(self.content))
+        self.emails = self.unique(self.emails)
+        self.hosts.extend(self.parser.hostnames_all(self.content))
+        self.hosts = self.unique(self.hosts)
 
     def _parse_data(self):
         self._parse_meta()
@@ -109,9 +113,8 @@ class PDFExtractor(IBaseExtractor):
             self.misc.append({'creator': creator.decode("utf-8")})
 
     @staticmethod
-    def _process_pdf(rsrcmgr, device, fp, pagenos=None, maxpages=0, password='', caching=True, check_extractable=True):
+    def _process_pdf(rsrcmgr, device, fp, pagenos=None, maxpages=0, caching=True, check_extractable=True):
         interpreter = PDFPageInterpreter(rsrcmgr, device)
-        for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password,
-                                      caching=caching, check_extractable=check_extractable):
+        for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, caching=caching, check_extractable=check_extractable):
             interpreter.process_page(page)
         return

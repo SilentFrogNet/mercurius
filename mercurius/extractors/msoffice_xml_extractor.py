@@ -5,13 +5,15 @@ import random
 from mercurius.core import myparser
 
 from .base_extractor import IBaseExtractor
-from mercurius.utils.logger import Logger, LogTypes
+from mercurius.loaders.extractor_loader import extractors_foo
+from mercurius.utils.file_types import FileTypes
 
 
 class MSOfficeXMLExtractor(IBaseExtractor):
+    extractor_name = "MSOfficeXMLExtractor"
 
-    def __init__(self, filename, logger=None):
-        super(MSOfficeXMLExtractor, self).__init__()
+    def __init__(self, logger=None):
+        super(MSOfficeXMLExtractor, self).__init__(logger)
         self.template = ""
         self.totalTime = ""
         self.pages = ""
@@ -36,25 +38,26 @@ class MSOfficeXMLExtractor(IBaseExtractor):
         self.revision = ""
         self.createdDate = ""
         self.modifiedDate = ""
-
-        self.filename = filename
-        if logger:
-            self.logger = logger
-        else:
-            self.logger = Logger(type=LogTypes.TO_SCREEN)
+        self.filename = None
         self.docu_filepath = None
         self.comments_filepath = None
         self.shared_strings_filepath = None
 
-    def parse_data(self):
+    @extractors_foo
+    def parse_data(self, path, filetype, **kwargs):
+        self.filename = path
+
+        if filetype not in FileTypes.MS_OFFICE_XML:
+            return None
+
         rnd = str(random.randrange(0, 1001, 3))
-        working_dir = os.path.dirname(os.path.realpath(self.filename))
+        tmp_dir = kwargs.get('configs', {}).get('tmp_directory', os.path.dirname(os.path.realpath(self.filename)))
         filename, file_extension = os.path.splitext(os.path.basename(self.filename))
-        app_filepath = os.path.join(working_dir, "app{}.xml".format(rnd))
-        core_filepath = os.path.join(working_dir, "core{}.xml".format(rnd))
-        self.docu_filepath = os.path.join(working_dir, "docu{}.xml".format(rnd))
-        self.comments_filepath = os.path.join(working_dir, "comments{}.xml".format(rnd))
-        self.shared_strings_filepath = os.path.join(working_dir, "shared_strings{}.xml".format(rnd))
+        app_filepath = os.path.join(tmp_dir, "app{}.xml".format(rnd))
+        core_filepath = os.path.join(tmp_dir, "core{}.xml".format(rnd))
+        self.docu_filepath = os.path.join(tmp_dir, "docu{}.xml".format(rnd))
+        self.comments_filepath = os.path.join(tmp_dir, "comments{}.xml".format(rnd))
+        self.shared_strings_filepath = os.path.join(tmp_dir, "shared_strings{}.xml".format(rnd))
 
         with zipfile.ZipFile(self.filename, 'r') as z:
             open(app_filepath, 'wb').write(z.read('docProps/app.xml'))
@@ -67,32 +70,40 @@ class MSOfficeXMLExtractor(IBaseExtractor):
                 self._extract_xlsx_xmls(z)
 
         # parse app info
-        with open(app_filepath, 'rb') as f:
-            app = f.read()
-            self.parse_app(app)
+        if os.path.exists(app_filepath):
+            with open(app_filepath, 'rb') as f:
+                app = f.read()
+                self.parse_app(app)
 
         # parse comments
-        if self.comments:
+        if os.path.exists(self.comments_filepath):
             with open(self.comments_filepath, 'rb') as f:
                 comm = f.read()
                 self.parse_comments(comm)
 
         # parse document content
-        with open(self.docu_filepath, 'rb') as f:
-            docu = f.read()
-            self.text = docu
+        if os.path.exists(self.docu_filepath):
+            with open(self.docu_filepath, 'rb') as f:
+                docu = f.read()
+                self.text = docu
 
         # parse core info
-        with open(core_filepath, 'rb') as f:
-            core = f.read()
-            self.parse_core(core)
+        if os.path.exists(core_filepath):
+            with open(core_filepath, 'rb') as f:
+                core = f.read()
+                self.parse_core(core)
 
         # Remove temporary files
-        os.remove(app_filepath)
-        os.remove(core_filepath)
-        os.remove(self.comments_filepath)
-        os.remove(self.docu_filepath)
-        os.remove(self.shared_strings_filepath)
+        if os.path.exists(app_filepath):
+            os.remove(app_filepath)
+        if os.path.exists(core_filepath):
+            os.remove(core_filepath)
+        if os.path.exists(self.comments_filepath):
+            os.remove(self.comments_filepath)
+        if os.path.exists(self.docu_filepath):
+            os.remove(self.docu_filepath)
+        if os.path.exists(self.shared_strings_filepath):
+            os.remove(self.shared_strings_filepath)
 
     def _extract_docx_xmls(self, z):
         open(self.docu_filepath, 'wb').write(z.read('word/document.xml'))
@@ -113,39 +124,11 @@ class MSOfficeXMLExtractor(IBaseExtractor):
             if fxml.filename.startswith('pt/sildes'):
                 open(self.docu_filepath, 'ab').write(z.read(fxml.filename))
 
-    def toString(self):
-        print("--- Metadata app ---")
-        print(" template: " + str(self.template))
-        print(" totalTime: " + str(self.totalTime))
-        print(" pages: " + str(self.pages))
-        print(" words: " + str(self.words))
-        print(" characters: " + str(self.characters))
-        print(" application: " + str(self.application))
-        print(" docSecurity: " + str(self.docSecurity))
-        print(" lines: " + str(self.lines))
-        print(" paragraphs: " + str(self.paragraphs))
-        print(" scaleCrop: " + str(self.scaleCrop))
-        print(" company: " + str(self.company))
-        print(" linksUpToDate: " + str(self.linksUpToDate))
-        print(" charactersWithSpaces: " + str(self.charactersWithSpaces))
-        print(" shareDoc:" + str(self.shareDoc))
-        print(" hyperlinksChanged:" + str(self.hyperlinksChanged))
-        print(" appVersion:" + str(self.appVersion))
-
-        print("\n --- Metadata core ---")
-        print(" title:" + str(self.title))
-        print(" subject:" + str(self.subject))
-        print(" creator:" + str(self.creator))
-        print(" keywords:" + str(self.keywords))
-        print(" lastModifiedBy:" + str(self.lastModifiedBy))
-        print(" revision:" + str(self.revision))
-        print(" createdDate:" + str(self.createdDate))
-        print(" modifiedDate:" + str(self.modifiedDate))
-
     def parse_comments(self, data):
         try:
             p = re.compile('w:author="(.*?)" w')
-            self.userscomments = p.findall(data)
+            # self.userscomments = p.findall(data)
+            self.users.append(p.findall(data))
         except:
             pass
 

@@ -4,22 +4,31 @@ import os
 import random
 
 from .base_extractor import IBaseExtractor
+from mercurius.loaders.extractor_loader import extractors_foo
+from mercurius.utils.file_types import FileTypes
 
 
 class OpenOfficeExtractor(IBaseExtractor):
-    def __init__(self, filepath):
-        super(OpenOfficeExtractor, self).__init__()
-        self.filepath = filepath
+    extractor_name = "OpenOfficeExtractor"
 
-    def parse_data(self):
+    def __init__(self, logger=None):
+        super(OpenOfficeExtractor, self).__init__(logger)
+
+    @extractors_foo
+    def parse_data(self, path, filetype, **kwargs):
+        self.filename = path
+
+        if filetype not in FileTypes.OPEN_OFFICE:
+            return None
+
         rnd = str(random.randrange(0, 1001, 3))
-        working_dir = os.path.dirname(os.path.realpath(self.filepath))
-        filename, file_extension = os.path.splitext(os.path.basename(self.filepath))
-        meta_filepath = os.path.join(working_dir, "meta{}.xml".format(rnd))
-        with zipfile.ZipFile(self.filepath, 'r') as z:
-            open(meta_filepath, 'wb').write(z.read('meta.xml'))
+        working_dir = os.path.dirname(os.path.realpath(self.filename))
+        filename, file_extension = os.path.splitext(os.path.basename(self.filename))
+        meta_filename = os.path.join(working_dir, "meta{}.xml".format(rnd))
+        with zipfile.ZipFile(self.filename, 'r') as z:
+            open(meta_filename, 'wb').write(z.read('meta.xml'))
 
-        with open(meta_filepath, 'rb') as f:
+        with open(meta_filename, 'rb') as f:
             self.metadata = f.read().decode('utf-8')
         os.remove('meta' + rnd + '.xml')
 
@@ -28,7 +37,7 @@ class OpenOfficeExtractor(IBaseExtractor):
     def _parse_meta(self):
         p = re.compile('office:version="([\d.]*)"><office:meta>')
         matches = p.findall(self.metadata)
-        if matches and len(matches)>0:
+        if matches and len(matches) > 0:
             self.misc.append({'version': str(matches[0])})
 
         p = re.compile('<meta:generator>(.*)</meta:generator>')

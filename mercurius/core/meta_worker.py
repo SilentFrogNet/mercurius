@@ -7,12 +7,14 @@ import random
 from mercurius.utils.logger import Logger, LogTypes
 from mercurius.utils.file_types import FileTypes
 from mercurius.utils import pretty_size
+from mercurius.core.exceptions import NotSupportedFileFormat
 from mercurius.extractors import MSOfficeExtractor, MSOfficeXMLExtractor, OpenOfficeExtractor, PDFExtractor, ImageExtractor
+from mercurius.loaders.extractor_loader import ExtractorLoader
 
 
 class MetaWorker(threading.Thread):
 
-    def __init__(self, tid, input_queue, output_store, stop_event, mg, logger=None, timeout=1):
+    def __init__(self, tid, input_queue, output_store, stop_event, merc, is_local, logger=None, timeout=1):
         super(MetaWorker, self).__init__()
         self.daemon = True
 
@@ -21,13 +23,16 @@ class MetaWorker(threading.Thread):
         self.input_queue = input_queue
         self.output_store = output_store
         self.stop_event = stop_event
-        self.mg = mg
+        self.merc = merc
         self.timeout = timeout
-        self.is_local = self.mg.local
+        self.is_local = is_local
         if logger:
             self.logger = logger
         else:
             self.logger = Logger(type=LogTypes.TO_SCREEN)
+        self.extractor_loader = ExtractorLoader(self.merc.configs)
+        self.extractor_loader.register_plugins()
+        self.plugin_manager = self.extractor_loader.get_plugin_manager()
 
     def run(self):
         while not self.stop_event.is_set():
@@ -50,13 +55,13 @@ class MetaWorker(threading.Thread):
     def _download_file(self, url):
         # Strip any trailing /'s before extracting file name.
         filename = str(url.strip('/').split('/')[-1])
-        dest_path = os.path.join(self.mg.out_directory, filename)
+        dest_path = os.path.join(self.merc.out_directory, filename)
 
         try:
             headers = {
-                'User-Agent': random.choice(self.mg.random_user_agents)
+                'User-Agent': random.choice(self.merc.random_user_agents)
             }
-            response = requests.get(url, headers=headers, verify=False, timeout=self.mg.url_timeout, stream=True)
+            response = requests.get(url, headers=headers, verify=False, timeout=self.merc.url_timeout, stream=True)
 
             # Download the file.
             if response.status_code == requests.codes.ok:
@@ -88,30 +93,39 @@ class MetaWorker(threading.Thread):
         out = {
             'working_dir': working_dir,
             'filename': filename,
-            'filetype': filetype
+            'filetype': filetype,
+            'results': []
         }
 
         self.logger.info("Parsing file \"{}.{}\"...".format(filename, filetype))
 
-        metaparser = None
-        if filetype == FileTypes.PDF:
-            metaparser = PDFExtractor(path)
-        # if filetype in FileTypes.MS_OFFICE:
-        #     metaparser = MSOfficeExtractor(path)
-        # if filetype in FileTypes.MS_OFFICE_XML:
-        #     metaparser = MSOfficeXMLExtractor(path)
-        # if filetype in FileTypes.OPEN_OFFICE:
-        #     metaparser = OpenOfficeExtractor(path)
-        if filetype in FileTypes.IMAGES:
-            metaparser = ImageExtractor(path)
+        try:
+            meta_out, errors = self._parse_metadata(path, filetype)
 
-        if metaparser:
-            if metaparser.parse_data():
-                out.update(metaparser.get_recap())
+            if meta_out:
+                for parser_out in meta_out:
+                    out['results'].append(parser_out.get_recap())
 
-                self.logger.success("File \"{}.{}\" parsed correctly".format(filename, filetype))
+                if errors:
+                    self.logger.warning("File \"{}.{}\" parsed with some warnings: {}".format(filename, filetype, ", ".join(errors)))
+                else:
+                    self.logger.success("File \"{}.{}\" parsed correctly".format(filename, filetype))
                 self.output_store.push(out)
             else:
-                self.logger.error("Error in the parsing {}.{}:{}".format(filename, filetype, " ".join(metaparser.get_errors())))
-        else:
-            self.logger.error("Unsupported file format for file {}.{}".format(filename, filetype))
+                self.logger.error("Error in the parsing of \"{}.{}\":{}".format(filename, filetype, ", ".join(errors)))
+        except NotSupportedFileFormat as e:
+            self.logger.error("Unsupported file format for file \"{}.{}\"".format(filename, filetype))
+
+    def _parse_metadata(self, path, filetype):
+        res = self.plugin_manager.hook.parse_data(path=path, filetype=filetype, configs=self.merc.configs)
+
+        if len(res) == 0:
+            raise NotSupportedFileFormat("Unsupported file format {}".format(filetype.upper()))
+
+        errors = []
+        for r in res:
+            if r:
+                errors.extend(r.get_errors())
+
+        return res, errors
+

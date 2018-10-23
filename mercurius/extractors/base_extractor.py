@@ -1,10 +1,10 @@
-import abc
+from mercurius.utils.logger import Logger, LogTypes
 
 
 class IBaseExtractor:
-    __metaclass__ = abc.ABCMeta
+    extractor_name = "IBaseExtractor"
 
-    def __init__(self):
+    def __init__(self, logger=None):
         self.metadata = ""
         self.content = ""
         self.users = []
@@ -12,10 +12,10 @@ class IBaseExtractor:
         self.hosts = []
         self.misc = []
         self.errors = []
-
-    @abc.abstractmethod
-    def parse_data(self):
-        raise NotImplementedError('Not yet implemented')
+        if logger:
+            self.logger = logger
+        else:
+            self.logger = Logger(type=LogTypes.TO_SCREEN)
 
     def get_users(self):
         return self.users
@@ -53,3 +53,6 @@ class IBaseExtractor:
     @staticmethod
     def unique(lst):
         return list(set(lst))
+
+    def __repr__(self):
+        return self.extractor_name

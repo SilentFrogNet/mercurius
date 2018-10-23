@@ -2,24 +2,28 @@ from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
 from .base_extractor import IBaseExtractor
-from mercurius.utils.logger import Logger, LogTypes
 from mercurius.core import myparser
+from mercurius.loaders.extractor_loader import extractors_foo
+from mercurius.utils.file_types import FileTypes
 
 
 class ImageExtractor(IBaseExtractor):
+    extractor_name = "ImageExtractor"
 
-    def __init__(self, filename, logger=None):
-        super(ImageExtractor, self).__init__()
-        self.filename = filename
+    def __init__(self, logger=None):
+        super(ImageExtractor, self).__init__(logger)
+
+    @extractors_foo
+    def parse_data(self, path, filetype, **kwargs):
+        self.filename = path
+
+        if filetype not in FileTypes.IMAGES:
+            return None
+
         self.image = Image.open(self.filename)
-        if logger:
-            self.logger = logger
-        else:
-            self.logger = Logger(type=LogTypes.TO_SCREEN)
 
-    def parse_data(self):
         if self.metadata:
-            return self.metadata
+            return self
 
         exif_data = {}
         info = self.image._getexif()
@@ -39,7 +43,7 @@ class ImageExtractor(IBaseExtractor):
         self.metadata = exif_data
         self._parse_metadata()
 
-        return self.metadata
+        return self
 
     @staticmethod
     def _convert_to_degrees(value):
