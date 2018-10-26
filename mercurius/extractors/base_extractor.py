@@ -18,15 +18,19 @@ class IBaseExtractor:
             self.logger = Logger(type=LogTypes.TO_SCREEN)
 
     def get_users(self):
+        self.users = self.unique(self.users)
         return self.users
 
     def get_emails(self):
+        self.emails = self.unique(self.emails)
         return self.emails
 
     def get_hosts(self):
+        self.hosts = self.unique(self.hosts)
         return self.hosts
 
     def get_misc(self):
+        self.misc = self.unique(self.misc)
         return self.misc
 
     def get_raw_metadata(self):
@@ -40,10 +44,10 @@ class IBaseExtractor:
 
     def get_recap(self):
         out = {
-            'users': self.users,
-            'emails': self.emails,
-            'hosts': self.hosts,
-            'misc': self.misc,
+            'users': self.get_users(),
+            'emails': self.get_emails(),
+            'hosts': self.get_hosts(),
+            'misc': self.get_misc(),
             'metadata': self.metadata,
             'content': self.content,
             'errors': self.errors

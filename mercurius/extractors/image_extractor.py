@@ -2,7 +2,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
 from .base_extractor import IBaseExtractor
-from mercurius.core import myparser
+from mercurius.core import data_parser
 from mercurius.loaders.extractor_loader import extractors_foo
 from mercurius.utils.file_types import FileTypes
 
@@ -91,24 +91,30 @@ class ImageExtractor(IBaseExtractor):
         artist = self.metadata.get('Artist', "").replace(u'\x00', '').strip()
         if artist:
             self.users.append(artist)
-            res = myparser.DataParser(artist)
+            res = data_parser.DataParser(artist)
             self.emails.extend(res.emails())
         str_copy = self.metadata.get('Copyright', "").replace(u'\x00', '').strip()
         if str_copy:
             self.users.append(str_copy)
-            res = myparser.DataParser(str_copy)
+            res = data_parser.DataParser(str_copy)
             self.emails.extend(res.emails())
         self.emails = self.unique(self.emails)
         taken = self.metadata.get('DateTime', "").strip()
         if taken:
             self.misc.append({'taken': taken})
-        self.misc.append({
-            'camera': {
-                'vendor': self.metadata.get('Make', None),
-                'model': self.metadata.get('Model', None)
-            },
-            'gps': {
-                'latitude': lat,
-                'longitude': lng
-            }
-        })
+        if lat and lng:
+            self.misc.append({
+                'gps': {
+                    'latitude': lat,
+                    'longitude': lng
+                }
+            })
+        vendor = self.metadata.get('Make', None)
+        model = self.metadata.get('Model', None)
+        if vendor or model:
+            self.misc.append({
+                'camera': {
+                    'vendor': vendor,
+                    'model': model
+                },
+            })

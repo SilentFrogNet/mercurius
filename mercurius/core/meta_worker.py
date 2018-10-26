@@ -53,6 +53,7 @@ class MetaWorker(threading.Thread):
         self._parse_file(dest_path)
 
     def _download_file(self, url):
+        # TODO: move to downloader
         # Strip any trailing /'s before extracting file name.
         filename = str(url.strip('/').split('/')[-1])
         dest_path = os.path.join(self.merc.out_directory, filename)

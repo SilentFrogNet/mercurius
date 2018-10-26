@@ -145,7 +145,7 @@ def get_shell_intro():
 
 
 def get_history_file():
-    return project_configs.get('DEFAULT',{}).get('support_directory', '~/.click-history')
+    return project_configs.get('DEFAULT', {}).get('support_directory', '~/.click-history')
 
 
 @shell(prompt=get_shell_prompt(), intro=get_shell_intro(), hist_file=get_history_file(), context_settings=CONTEXT_SETTINGS)

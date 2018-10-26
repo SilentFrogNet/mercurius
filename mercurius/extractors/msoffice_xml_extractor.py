@@ -2,7 +2,7 @@ import zipfile
 import re
 import os
 import random
-from mercurius.core import myparser
+from mercurius.core import data_parser
 
 from .base_extractor import IBaseExtractor
 from mercurius.loaders.extractor_loader import extractors_foo
@@ -302,7 +302,7 @@ class MSOfficeXMLExtractor(IBaseExtractor):
         return temporal
 
     def getEmails(self):
-        res = myparser.DataParser(self.text)
+        res = data_parser.DataParser(self.text)
         return res.emails()
 
     def getPaths(self):

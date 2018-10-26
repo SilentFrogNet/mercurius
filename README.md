@@ -13,6 +13,14 @@
 Started as a fork of Christian Martorella's Metagoofil it has been completely refactored. 
 So now it's **_almost_** all new!
 
+
+## Install
+
+  * From git
+
+    `pip install git+git://github.com/SilentFrogNet/mercurius.git`
+
+
 ## Origin of the Name
 
 The name **Mercurius** is inspired from the greek god Hermes. Among the others he is the god of _luck_, _trickery_ and _thieves_.
@@ -41,9 +49,10 @@ extracts the metadata of the file using specific libraries for parsing different
 At the moment this tool can parse and extract metadata from:
   * Microsoft Office 97 documents (doc, xls, ppt)
   * Microsoft Office 2k+ documents (docx, xlsx, pptx)
-  * OpenOffice documents (odt, ods, odp)
   * PDF (pdf)
   * Images with Exif data (jpg/jpeg, tiff)
+  * OpenOffice documents (odt, ods, odp)  <- NOT YET
+  * Apple Office documents (pages, numbers, key)  <- NOT YET
 
 
 ## Difference From original (Martorella's version)
@@ -80,6 +89,7 @@ It depends on:
   * [x] MSOfficeExtractor
   * [ ] MSOfficeXMLExtractor
   * [ ] OpenOfficeExtractor
+  * [ ] AppleOfficeExtractor
 
 
 ## Changelog 1.0.0:

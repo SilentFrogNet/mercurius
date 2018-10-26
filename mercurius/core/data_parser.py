@@ -1,41 +1,43 @@
-import string
+import os
 import re
+import socket
 
 from bs4 import BeautifulSoup
 
 
 class DataParser:
 
-    def __init__(self, domain=None):
-        self.domain = domain
+    def hostnames(self, data):
+        reg_hosts = re.compile('(((ht|f)tp(s)?:\/\/)?(w{0,3}\.)?[a-zA-Z0-9_\-\.\:\#\/\~\}]+(\.[a-zA-Z]{1,4})(\/[a-zA-Z0-9_\-\.\:\#\/\~\}]*)?)')
+        h1 = [h[0] for h in reg_hosts.findall(data)]
 
-    def hostnames(self, data, domain=None):
-        if domain is None:
-            domain = self.domain
-        reg_hosts = re.compile('[a-zA-Z0-9.-]*\.' + domain)
-        hosts = self.unique(reg_hosts.findall(data))
-        return hosts
+        reg_hosts2 = re.compile('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')
+        h2 = reg_hosts2.findall(data)
 
-    def hostnames_all(self, data):
-        reg_hosts = re.compile('<cite>(.*?)</cite>')
-        temp = reg_hosts.findall(data)
-        for x in temp:
-            if x.count(':'):
-                res = x.split(':')[1].split('/')[2]
-            else:
-                res = x.split("/")[0]
-            temp.append(res)
-        hostnames = self.unique(temp)
-        return hostnames
+        reg_ips = re.compile('^([0-9]{1,3}.){3}[0-9]{1,3}($|\/([0-9]|[1-2][0-9]|3[0-2])$)')
+        h3 = reg_ips.findall(data)
+
+        return self.strip_unreachable_hosts(self.unique(h1 + h2 + h3))
 
     def emails(self, data):
-        reg_emails = re.compile('[a-zA-Z0-9.-_]+@[a-zA-Z0-9.-]+')
-        emails = self.unique(reg_emails.findall(data))
+        reg_emails = re.compile('(([\d\w]+[\.\w\d]*)\+?([\.\w\d]*)?@([\w\d]+[\.\w\d]*))')
+        emails = self.unique([e[0] for e in reg_emails.findall(data)])
         return emails
 
     @staticmethod
     def unique(lst):
         return list(set(lst))
+
+    @staticmethod
+    def strip_unreachable_hosts(hosts):
+        ret = []
+        for h in hosts:
+            try:
+                socket.gethostbyname(h)
+                ret.append(h)
+            except socket.gaierror:
+                pass
+        return ret
 
     # def genericClean(self):
     #     data = re.sub('<em>', '', data)

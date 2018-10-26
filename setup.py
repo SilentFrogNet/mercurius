@@ -16,7 +16,7 @@ setuptools.setup(
     description=SHORT_DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    license='MIT',
+    license='GPLv2',
     url="https://github.com/SilentFrogNet/mercurius",
     packages=setuptools.find_packages(),
     classifiers=[
@@ -37,7 +37,10 @@ setuptools.setup(
     ],
     install_requires=[
         'Click',
-        'click-shell'
+        'click-shell',
+        'termcolor',
+        'colorama',
+        'configobj'
     ],
     entry_points='''
         [console_scripts]
