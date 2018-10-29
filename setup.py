@@ -9,7 +9,7 @@ with open("VERSION", 'r') as f:
     __version__ = f.read().strip()
 
 setuptools.setup(
-    name="Mercurius",
+    name="mercurius",
     version=__version__,
     author="Ilario Dal Grande",
     author_email="ilario.dalgrande@silentfrog.net",
