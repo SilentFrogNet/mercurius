@@ -40,7 +40,16 @@ setuptools.setup(
         'click-shell',
         'termcolor',
         'colorama',
-        'configobj'
+        'configobj',
+        'pdfminer.six',
+        'hachoir3',
+        'requests',
+        'Pillow',
+        'spinner',
+        'addict'
+    ],
+    dependency_links=[
+        'git+git://github.com/SilentFrogNet/spinner.git',
     ],
     entry_points='''
         [console_scripts]
