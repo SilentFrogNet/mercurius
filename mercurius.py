@@ -273,7 +273,8 @@ def banner():
     """
     Prints a random banner of the application
     """
-    banner_str = Banners.get_random_banner(version="2.1.3")
+    banner_str = "Mercurius  Copyright (C) 2018  Ilario Dal Grande @ SilentFrog\n"
+    banner_str += Banners.get_random_banner(version=cli_version)
     print("\n" + banner_str)
 
 

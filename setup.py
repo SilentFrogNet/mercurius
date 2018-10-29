@@ -1,3 +1,4 @@
+import os
 import setuptools
 
 SHORT_DESCRIPTION = "A tool to extract and manage medatada from remote domains or locally."
@@ -7,6 +8,11 @@ with open("README.md", 'r') as f:
 
 with open("VERSION", 'r') as f:
     __version__ = f.read().strip()
+
+# hacky and ugly workaround to get all dependecies installed.
+# TODO: remove it in future releases
+os.system('pip install git+git://github.com/SilentFrogNet/spinner.git')
+os.system('pip install git+git://github.com/SilentFrogNet/click-shell.git')
 
 setuptools.setup(
     name="mercurius",
@@ -37,7 +43,6 @@ setuptools.setup(
     ],
     install_requires=[
         'Click',
-        'click-shell',
         'termcolor',
         'colorama',
         'configobj',
@@ -45,11 +50,13 @@ setuptools.setup(
         'hachoir3',
         'requests',
         'Pillow',
-        'spinner',
-        'addict'
+        'addict',
+        # 'spinner>=1.1.0',
+        # 'click-shell>=3.0.0'
     ],
     dependency_links=[
-        'git+git://github.com/SilentFrogNet/spinner.git',
+        # 'git+git://github.com/SilentFrogNet/spinner.git@9776491a37788744a36a5a97da7e842287390411',
+        # 'git+git://github.com/SilentFrogNet/click-shell.git',
     ],
     entry_points='''
         [console_scripts]
