@@ -51,6 +51,9 @@ setuptools.setup(
         'requests',
         'Pillow',
         'addict',
+        'validators',
+        'google',
+        'pluggy',
         # 'spinner>=1.1.0',
         # 'click-shell>=3.0.0'
     ],
@@ -60,6 +63,6 @@ setuptools.setup(
     ],
     entry_points='''
         [console_scripts]
-        merc=mercurius:cli
+        merc=app:cli
     ''',
 )
