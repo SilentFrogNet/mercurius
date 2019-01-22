@@ -50,67 +50,54 @@ At the moment this tool can parse and extract metadata from:
   * Microsoft Office 97 documents (doc, xls, ppt)
   * Microsoft Office 2k+ documents (docx, xlsx, pptx)
   * PDF (pdf)
-  * Images with Exif data (jpg/jpeg, tiff)
-  * OpenOffice documents (odt, ods, odp)  <- NOT YET
-  * Apple Office documents (pages, numbers, key)  <- NOT YET
+  * Images with Exif data (jpg/jpeg, tif/tiff)
+  * OpenOffice documents (odt, ods, odp)  **<- _NOT YET_**
+  * Apple Office documents (pages, numbers, key)  **<- _NOT YET_**
 
 
-## Difference From original (Martorella's version)
+## Available extractors
 
-  * Ported to Python 3.
-  * Changed discovery module to use googlesearch library instead of http.client
-  * Added Exif Metadata extractor for images
-  * Fixed MSOfficeXMLExtractor to work also with xlsx and pptx
-  * Refactored MyParser to extract more data
-  * Modernized a bit...
-
-
-## Dependencies:
-
-All dependencies are excluded again, due to incompatibility with Python 3.
-
-It depends on:
-  * [**pdfminer.six**](https://github.com/pdfminer/pdfminer.six/)
-  * [**hachoir3**](https://pypi.org/project/hachoir3/)
-  * [**requests**](http://docs.python-requests.org/en/master/)
-  * [**Pillow**](https://pillow.readthedocs.io/en/latest/)
-  * [**bs4**](https://www.crummy.com/software/BeautifulSoup/)
-  * [**click**](http://click.pocoo.org/6/)
-  * [**termcolor**](https://pypi.org/project/termcolor/)
-  * [**colorama**](https://github.com/tartley/colorama)
-  * [**spinner**](https://github.com/SilentFrogNet/spinner)
-  * [**addict**](https://github.com/mewwts/addict)
-
-
-## Working extractors:
-
+Those are the available extractors:
   * [x] PDFExtractor
   * [x] ImageExtractor
   * [x] MSOfficeExtractor
-  * [ ] MSOfficeXMLExtractor
+  * [x] MSOfficeXMLExtractor
   * [ ] OpenOfficeExtractor
   * [ ] AppleOfficeExtractor
+  
+The tool implements a plugin architecture though [pluggy system](https://pluggy.readthedocs.io/en/latest/).
+
+To enable a new plugin it must be put in the `mercurius/extractors` folder and the enabled through the configuration file with an entry like `<plugin_file_name>=<class_extractor_name>`.
+  
+  
+## Quick start
+  
+
+## Working on features (_for the future_):
+
+  * [ ] Integrate [Bing Search](https://docs.microsoft.com/it-it/azure/cognitive-services/bing-web-search/quickstarts/python)
+  * [ ] Integrate [Exalead Search](https://www.exalead.com/search/)
+  * [ ] Make it python-agnostic? (working both on python 2 and 3) with [**six**](https://github.com/benjaminp/six)
+  * [ ] Manage applications's context
+    * [ ] Keep track of already downloaded files
+    * [x] Keep domain context
+      * [ ] Further searches on the same domain will extend data
+      * [ ] if domain is changed or local analysis is performed, ask to cleanup or extend
+  * [ ] Change plugin system...move from "_pick from folder_" to "_get through setuptools_"
 
 
 ## Changelog 1.0.0:
 
   * [x] Changed/Fixed Google Search
-  * [ ] Integrated [Bing Search](https://docs.microsoft.com/it-it/azure/cognitive-services/bing-web-search/quickstarts/python)
-  * [ ] Integrated Exalead Search (?????)
   * [x] Fixed downloader
   * [ ] Fixed/Enhanced page parser 
   * [ ] Fixed metadataMSOfficeXML extractor
   * [x] Added Image Exif metadata extractor
   * [x] Fixed metadataPDF extractor
   * [x] Removed external projects
-  * [x] Modified cli interface (use click)
-    * [x] Manage context application
-        * [ ] keep track of already downloaded files
-        * [x] keep domain context
-        * [ ] further searches on the same domain will extend data
-        * [ ] if domain is changed or local analysis is performed, ask to cleanup or extend 
+  * [x] Modified _cli_ interface (using click)
+  * [x] Added _shell_ interface (using a modified version of click-shell) 
   * [x] Ascii Art random banner like metasploit ;)
   * [ ] Other little fixes
-  * [ ] Does make it python-agnostic? (working both on python 2 and 3) with [**six**](https://github.com/benjaminp/six)
-  * [ ] Move all dependencies to setup.py file
+  * [x] Move all dependencies to setup.py file
   * [x] Setup a plugin architecture for the extractors with [**pluggy**](https://github.com/pytest-dev/pluggy)
