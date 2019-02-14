@@ -25,7 +25,18 @@ pipeline {
                 always {
                     junit 'test-reports/results.xml'
                     recordIssues enabledForFailure: true, tool: pyLint(pattern: 'test-reports/pylint.out')
-                    cobertura 'test-reports/coverage-results.xml'
+                    step([
+                        $class: 'CoberturaPublisher', 
+                        autoUpdateHealth: false, 
+                        autoUpdateStability: false, 
+                        coberturaReportFile: '**/test-reports/coverage.xml', 
+                        failUnhealthy: false, 
+                        failUnstable: false, 
+                        maxNumberOfBuilds: 0, 
+                        onlyStable: false, 
+                        sourceEncoding: 'ASCII', 
+                        zoomCoverageChart: false
+                    ])
                 }
             }
         }
