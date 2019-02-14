@@ -12,4 +12,4 @@ pip install --upgrade pip
 pip install --quiet pylint
 pip install --quiet $WORKSPACE/  # where your setup.py lives
 py.test --verbose --junit-xml test-reports/results.xml mercurius/tests
-pylint -f parseable mercurius/ | tee pylint.out
+# pylint -f parseable mercurius/ | tee pylint.out
