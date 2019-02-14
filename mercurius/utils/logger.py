@@ -36,7 +36,7 @@ class Logger:
             return
 
         if self.type == LogTypes.TO_SCREEN:
-            print(f"{self.PREFIX_INFO} {text}")
+            print("{prefix} {msg}".format(prefix=self.PREFIX_INFO, msg=text))
         elif self.type == LogTypes.TO_COLORED_SCREEN:
             cprint(colored(self.PREFIX_INFO), 'cyan', attrs=['bold'], end=' ')
             print(text)
@@ -48,7 +48,7 @@ class Logger:
             return
 
         if self.type == LogTypes.TO_SCREEN:
-            print(f"{self.PREFIX_SUCCESS} {text}")
+            print("{prefix} {msg}".format(prefix=self.PREFIX_SUCCESS, msg=text))
         elif self.type == LogTypes.TO_COLORED_SCREEN:
             cprint(colored(self.PREFIX_SUCCESS), 'green', attrs=['bold'], end=' ')
             print(text)
@@ -60,7 +60,7 @@ class Logger:
             return
 
         if self.type == LogTypes.TO_SCREEN:
-            print(f"{self.PREFIX_WARNING} {text}")
+            print("{prefix} {msg}".format(prefix=self.PREFIX_WARNING, msg=text))
         elif self.type == LogTypes.TO_COLORED_SCREEN:
             cprint(colored(self.PREFIX_WARNING), 'yellow', attrs=['bold'], end=' ')
             print(text)
@@ -72,7 +72,7 @@ class Logger:
             return
 
         if self.type == LogTypes.TO_SCREEN:
-            print(f"{self.PREFIX_ERROR} {text}")
+            print("{prefix} {msg}".format(prefix=self.PREFIX_ERROR, msg=text))
         elif self.type == LogTypes.TO_COLORED_SCREEN:
             cprint(colored(self.PREFIX_ERROR), 'red', attrs=['bold'], end=' ')
             print(text)

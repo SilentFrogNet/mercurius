@@ -72,7 +72,7 @@ class Mercurius:
 
         if self.stealth:
             # If stealth just display collected files.
-            self.logger.info(f"List of files to analyze in \"{self.out_directory}\": ")
+            self.logger.info("List of files to analyze in \"{}\": ".format(self.out_directory))
             working_dir = os.path.realpath(self.out_directory)
             for file_name in os.listdir(working_dir):
                 print("  * " + file_name)
@@ -105,7 +105,7 @@ class Mercurius:
 
             print_string = "Searching online for '{}' files in {}...".format(filetype, self.domain)
             stop_spinner = threading.Event()
-            spin_thread = Spinner(stop_spinner, prefix=f"[*] Info: {print_string}")
+            spin_thread = Spinner(stop_spinner, prefix="[*] Info: {}".format(print_string))
             spin_thread.start()
 
             self.files = self._get_docs_by_filetype(filetype, search_max)
@@ -123,7 +123,7 @@ class Mercurius:
                 # Otherwise download and analyze them
                 print_string = "Downloading and analyzing files..."
                 stop_spinner = threading.Event()
-                spin_thread = Spinner(stop_spinner, prefix=f"[*] Info: {print_string}")
+                spin_thread = Spinner(stop_spinner, prefix="[*] Info: {}".format(print_string))
                 spin_thread.start()
 
                 # If it's not stealth mode download and analyze files
@@ -180,21 +180,21 @@ class Mercurius:
         print("--- USERS -----------------------")
         if self.all_users:
             for u in self.all_users:
-                print(f"  * {u}")
+                print("  * {}".format(u))
         else:
             self.logger.warning("No users found")
         print("")
         print("--- EMAILS ----------------------")
         if self.all_emails:
             for e in self.all_emails:
-                print(f"  * {e}")
+                print("  * {}".format(e))
         else:
             self.logger.warning("No emails found")
         print("")
         print("--- HOSTS -----------------------")
         if self.all_emails:
             for h in self.all_hosts:
-                print(f"  * {h}")
+                print("  * {}".format(h))
         else:
             self.logger.warning("No hosts found")
         print("\n")

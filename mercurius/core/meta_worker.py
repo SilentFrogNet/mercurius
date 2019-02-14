@@ -71,7 +71,7 @@ class MetaWorker(threading.Thread):
                 except KeyError:
                     size = len(response.content)
 
-                self.logger.info(f"Downloading file - [{pretty_size(size)}] {url}")
+                self.logger.info("Downloading file - [{size}] {url}".format(size=pretty_size(size), url=url))
 
                 with open(dest_path, "wb") as fh:
                     for chunk in response:
