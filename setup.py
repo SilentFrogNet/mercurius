@@ -11,8 +11,8 @@ with open("VERSION", 'r') as f:
 
 # hacky and ugly workaround to get all dependecies installed.
 # TODO: remove it in future releases
-# os.system('pip install git+git://github.com/SilentFrogNet/spinner.git')
-# os.system('pip install git+git://github.com/SilentFrogNet/click-shell.git')
+os.system('pip install git+git://github.com/SilentFrogNet/spinner.git')
+os.system('pip install git+git://github.com/SilentFrogNet/click-shell.git')
 
 setuptools.setup(
     name="mercurius",
@@ -53,12 +53,12 @@ setuptools.setup(
         'validators',
         'google',
         'pluggy',
-        # 'spinner>=1.1.0',
-        # 'click-shell>=3.0.0'
+        # 'spinner',
+        # 'click-shell'
     ],
     dependency_links=[
-        # 'git+git://github.com/SilentFrogNet/spinner.git@9776491a37788744a36a5a97da7e842287390411',
-        # 'git+git://github.com/SilentFrogNet/click-shell.git',
+        # 'git+https://github.com/SilentFrogNet/spinner.git#egg=spinner',
+        # 'git+https://github.com/SilentFrogNet/click-shell.git#egg=click-shell',
     ],
     entry_points='''
         [console_scripts]

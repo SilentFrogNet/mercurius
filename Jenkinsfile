@@ -15,7 +15,8 @@ pipeline {
 		stage('Test') {
             agent {
                 docker {
-                    image 'python:3.6'  //only version 2.7 of python -> 'qnib/pytest'
+                    // image 'python:3.6'  //only version 2.7 of python -> 'qnib/pytest'
+                    image 'sagydocker/pylint-pytest'
                 }
             }
             steps {
