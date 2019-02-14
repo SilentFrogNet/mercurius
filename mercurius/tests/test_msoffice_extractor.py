@@ -1,6 +1,6 @@
 import os
+import unittest
 
-from unittest.case import TestCase
 from pprint import pprint
 
 from mercurius.extractors import MSOfficeExtractor
@@ -10,7 +10,7 @@ PROJECT_ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 PROJECT_FILES_PATH = os.path.join(PROJECT_ROOT_PATH, 'data')
 
 
-class RootTest(TestCase):
+class RootTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -82,3 +82,6 @@ class TestMSOfficeExtractor(RootTest):
     #     self.assertIsInstance(result, MSOfficeExtractor)
     #     compare_unordered_lists(self, result.get_hosts(), self.with_all_data['hosts'])
     #     compare_unordered_lists(self, result.get_emails(), self.with_all_data['emails'])
+
+if __name__ == '__main__':
+    unittest.main()

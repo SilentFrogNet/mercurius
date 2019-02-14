@@ -1,6 +1,6 @@
 import os
+import unittest
 
-from unittest.case import TestCase
 from pprint import pprint
 
 from mercurius.extractors import ImageExtractor
@@ -9,7 +9,7 @@ PROJECT_ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 PROJECT_FILES_PATH = os.path.join(PROJECT_ROOT_PATH, 'data')
 
 
-class RootTest(TestCase):
+class RootTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -74,3 +74,6 @@ class TestImageExtractor(RootTest):
         self.assertListEqual(result.get_emails(), [])
         self.assertListEqual(result.get_hosts(), [])
         self.assertListEqual(result.get_users(), [])
+
+if __name__ == '__main__':
+    unittest.main()
