@@ -126,7 +126,7 @@ class MSOfficeXMLExtractor(IBaseExtractor):
 
     def parse_comments(self, data):
         try:
-            p = re.compile('w:author="(.*?)" w')
+            p = re.compile(r'w:author="(.*?)" w')
             # self.userscomments = p.findall(data)
             self.users.append(p.findall(data))
         except:
@@ -134,146 +134,146 @@ class MSOfficeXMLExtractor(IBaseExtractor):
 
     def parse_app(self, data):
         try:
-            p = re.compile('<Template>(.*)</Template>')
+            p = re.compile(r'<Template>(.*)</Template>')
             self.template = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<TotalTime>(.*)</TotalTime>')
+            p = re.compile(r'<TotalTime>(.*)</TotalTime>')
             self.totalTime = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<Pages>(.*)</Pages>')
+            p = re.compile(r'<Pages>(.*)</Pages>')
             self.pages = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<Words>(.*)</Words>')
+            p = re.compile(r'<Words>(.*)</Words>')
             self.words = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<Characters>(.*)</Characters>')
+            p = re.compile(r'<Characters>(.*)</Characters>')
             self.characters = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<Application>(.*)</Application>')
+            p = re.compile(r'<Application>(.*)</Application>')
             self.application = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<DocSecurity>(.*)</DocSecurity>')
+            p = re.compile(r'<DocSecurity>(.*)</DocSecurity>')
             self.docSecurity = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<Lines>(.*)</Lines>')
+            p = re.compile(r'<Lines>(.*)</Lines>')
             self.lines = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<Paragraphs>(.*)</Paragraphs>')
+            p = re.compile(r'<Paragraphs>(.*)</Paragraphs>')
             self.paragraphs = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<ScaleCrop>(.*)</ScaleCrop>')
+            p = re.compile(r'<ScaleCrop>(.*)</ScaleCrop>')
             self.scaleCrop = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<Company>(.*)</Company>')
+            p = re.compile(r'<Company>(.*)</Company>')
             self.company = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<LinksUpToDate>(.*)</LinksUpToDate>')
+            p = re.compile(r'<LinksUpToDate>(.*)</LinksUpToDate>')
             self.linksUpToDate = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<CharactersWithSpaces>(.*)</CharactersWithSpaces>')
+            p = re.compile(r'<CharactersWithSpaces>(.*)</CharactersWithSpaces>')
             self.charactersWithSpaces = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<SharedDoc>(.*)</SharedDoc>')
+            p = re.compile(r'<SharedDoc>(.*)</SharedDoc>')
             self.sharedDoc = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<HyperlinksChanged>(.*)</HyperlinksChanged>')
+            p = re.compile(r'<HyperlinksChanged>(.*)</HyperlinksChanged>')
             self.hyperlinksChanged = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<AppVersion>(.*)</AppVersion>')
+            p = re.compile(r'<AppVersion>(.*)</AppVersion>')
             self.appVersion = str(p.findall(data)[0])
         except:
             pass
 
     def parse_core(self, data):
         try:
-            p = re.compile('<dc:title>(.*)</dc:title>')
+            p = re.compile(r'<dc:title>(.*)</dc:title>')
             self.title = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<dc:subject>(.*)</dc:subject>')
+            p = re.compile(r'<dc:subject>(.*)</dc:subject>')
             self.subject = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<dc:creator>(.*)</dc:creator>')
+            p = re.compile(r'<dc:creator>(.*)</dc:creator>')
             self.creator = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<cp:keywords>(.*)</cp:keywords>')
+            p = re.compile(r'<cp:keywords>(.*)</cp:keywords>')
             self.keywords = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<cp:lastModifiedBy>(.*)</cp:lastModifiedBy>')
+            p = re.compile(r'<cp:lastModifiedBy>(.*)</cp:lastModifiedBy>')
             self.lastModifiedBy = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<cp:revision>(.*)</cp:revision>')
+            p = re.compile(r'<cp:revision>(.*)</cp:revision>')
             self.revision = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<dcterms:created xsi:type=".*">(.*)</dcterms:created>')
+            p = re.compile(r'<dcterms:created xsi:type=".*">(.*)</dcterms:created>')
             self.createdDate = str(p.findall(data)[0])
         except:
             pass
 
         try:
-            p = re.compile('<dcterms:modified xsi:type=".*">(.*)</dcterms:modified>')
+            p = re.compile(r'<dcterms:modified xsi:type=".*">(.*)</dcterms:modified>')
             self.modifiedDate = str(p.findall(data)[0])
         except:
             pass

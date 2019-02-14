@@ -8,19 +8,19 @@ from bs4 import BeautifulSoup
 class DataParser:
 
     def hostnames(self, data):
-        reg_hosts = re.compile('(((ht|f)tp(s)?:\/\/)?(w{0,3}\.)?[a-zA-Z0-9_\-\.\:\#\/\~\}]+(\.[a-zA-Z]{1,4})(\/[a-zA-Z0-9_\-\.\:\#\/\~\}]*)?)')
+        reg_hosts = re.compile(r'(((ht|f)tp(s)?:\/\/)?(w{0,3}\.)?[a-zA-Z0-9_\-\.\:\#\/\~\}]+(\.[a-zA-Z]{1,4})(\/[a-zA-Z0-9_\-\.\:\#\/\~\}]*)?)')
         h1 = [h[0] for h in reg_hosts.findall(data)]
 
-        reg_hosts2 = re.compile('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')
+        reg_hosts2 = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')
         h2 = reg_hosts2.findall(data)
 
-        reg_ips = re.compile('^([0-9]{1,3}.){3}[0-9]{1,3}($|\/([0-9]|[1-2][0-9]|3[0-2])$)')
+        reg_ips = re.compile(r'^([0-9]{1,3}.){3}[0-9]{1,3}($|\/([0-9]|[1-2][0-9]|3[0-2])$)')
         h3 = reg_ips.findall(data)
 
         return self.strip_unreachable_hosts(self.unique(h1 + h2 + h3))
 
     def emails(self, data):
-        reg_emails = re.compile('(([\d\w]+[\.\w\d]*)\+?([\.\w\d]*)?@([\w\d]+[\.\w\d]*))')
+        reg_emails = re.compile(r'(([\d\w]+[\.\w\d]*)\+?([\.\w\d]*)?@([\w\d]+[\.\w\d]*))')
         emails = self.unique([e[0] for e in reg_emails.findall(data)])
         return emails
 
@@ -77,7 +77,7 @@ class DataParser:
     #     return urls
     #
     # def people_linkedin(self):
-    #     reg_people = re.compile('">[a-zA-Z0-9._ -]* profiles | LinkedIn')
+    #     reg_people = re.compile(r'">[a-zA-Z0-9._ -]* profiles | LinkedIn')
     #
     #     temp = reg_people.findall(data)
     #     resul = []
@@ -92,7 +92,7 @@ class DataParser:
     #     return resul
     #
     # def profiles(self):
-    #     reg_people = re.compile('">[a-zA-Z0-9._ -]* - <em>Google Profile</em>')
+    #     reg_people = re.compile(r'">[a-zA-Z0-9._ -]* - <em>Google Profile</em>')
     #     temp = reg_people.findall(data)
     #     resul = []
     #     for x in temp:
