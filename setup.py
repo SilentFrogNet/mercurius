@@ -11,8 +11,8 @@ with open("VERSION", 'r') as f:
 
 # hacky and ugly workaround to get all dependecies installed.
 # TODO: remove it in future releases
-os.system('pip3 install git+git://github.com/SilentFrogNet/spinner.git')
-os.system('pip3 install git+git://github.com/SilentFrogNet/click-shell.git')
+os.system('pip install git+git://github.com/SilentFrogNet/spinner.git')
+os.system('pip install git+git://github.com/SilentFrogNet/click-shell.git')
 
 setuptools.setup(
     name="mercurius",
