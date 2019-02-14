@@ -1,7 +1,6 @@
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
 from hachoir.core import config as hachoir_config
-from addict import Dict
 
 from .base_extractor import IBaseExtractor
 from mercurius.loaders.extractor_loader import extractors_foo
@@ -42,7 +41,7 @@ class MSOfficeExtractor(IBaseExtractor):
 
         if metadata:
             metalist = metadata.exportPlaintext()
-            meta = Dict()
+            meta = {}
             for item in metalist:
                 self._parse_item(item, meta)
 
@@ -57,7 +56,7 @@ class MSOfficeExtractor(IBaseExtractor):
 
     def _parse_item(self, item, father=None):
         if father is None:
-            father = Dict()
+            father = {}
         tag, value = item.split(':', 1)
         value = value.strip()
         tag = tag.strip()

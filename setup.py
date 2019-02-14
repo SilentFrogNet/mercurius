@@ -11,8 +11,8 @@ with open("VERSION", 'r') as f:
 
 # hacky and ugly workaround to get all dependecies installed.
 # TODO: remove it in future releases
-os.system('pip install git+git://github.com/SilentFrogNet/spinner.git')
-os.system('pip install git+git://github.com/SilentFrogNet/click-shell.git')
+# os.system('pip install git+git://github.com/SilentFrogNet/spinner.git')
+# os.system('pip install git+git://github.com/SilentFrogNet/click-shell.git')
 
 setuptools.setup(
     name="mercurius",
@@ -43,14 +43,13 @@ setuptools.setup(
     ],
     install_requires=[
         'Click',
-        'termcolor',
-        'colorama',
+        # 'termcolor',
+        # 'colorama',
         'configobj',
         'pdfminer.six',
         'hachoir3',
         'requests',
         'Pillow',
-        'addict',
         'validators',
         'google',
         'pluggy',
