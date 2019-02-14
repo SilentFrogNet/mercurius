@@ -25,6 +25,7 @@ pipeline {
                 always {
                     junit 'test-reports/results.xml'
                     recordIssues enabledForFailure: true, tool: pyLint(pattern: 'test-reports/pylint.out')
+                    cobertura 'test-reports/coverage-results.xml'
                 }
             }
         }
