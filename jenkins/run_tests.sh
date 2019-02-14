@@ -6,11 +6,10 @@ if [ -d $PYENV_HOME ]; then
 fi
 
 # Create virtualenv and install necessary packages
-# virtualenv --no-site-packages $PYENV_HOME
 python3 -m venv $PYENV_HOME	# try to use python's builtin venv
-. $PYENV_HOME/bin/activate
-# pip install --quiet nosexcover
-# pip install --quiet pylint
+source $PYENV_HOME/bin/activate
+pip install --upgrade pip
+pip install --quiet pylint
 pip install --quiet $WORKSPACE/  # where your setup.py lives
-# nosetests --with-xcoverage --with-xunit --cover-package=myapp --cover-erase
-# pylint -f parseable myapp/ | tee pylint.out
+py.test --verbose --junit-xml test-reports/results.xml mercurius/tests
+pylint -f parseable mercurius/ | tee pylint.out

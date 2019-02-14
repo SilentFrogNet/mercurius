@@ -8,7 +8,6 @@ pipeline {
                 }
             }
             steps {
-                sh 'jenkins/setup_env.sh'
                 sh 'python -m py_compile app.py' 
                 sh 'python -m compileall mercurius'
             }
@@ -16,11 +15,11 @@ pipeline {
 		stage('Test') {
             agent {
                 docker {
-                    image 'qnib/pytest'
+                    image 'grihabor/pytest' //only version 2.7 of python -> 'qnib/pytest'
                 }
             }
             steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml mercurius/tests'
+                sh 'jenkins/run_tests.sh'
             }
             post {
                 always {
