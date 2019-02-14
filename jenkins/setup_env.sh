@@ -6,7 +6,8 @@ if [ -d $PYENV_HOME ]; then
 fi
 
 # Create virtualenv and install necessary packages
-virtualenv --no-site-packages $PYENV_HOME
+# virtualenv --no-site-packages $PYENV_HOME
+python3 -m venv --no-site-packages $PYENV_HOME	# try to use python's builtin venv
 . $PYENV_HOME/bin/activate
 # pip install --quiet nosexcover
 # pip install --quiet pylint
