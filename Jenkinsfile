@@ -15,7 +15,7 @@ pipeline {
 		stage('Test') {
             agent {
                 docker {
-                    image 'grihabor/pytest' //only version 2.7 of python -> 'qnib/pytest'
+                    image 'grihabor/pytest'  //only version 2.7 of python -> 'qnib/pytest'
                 }
             }
             steps {
