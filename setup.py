@@ -50,16 +50,15 @@ setuptools.setup(
         'hachoir3',
         'requests',
         'Pillow',
-        'addict',
         'validators',
         'google',
         'pluggy',
-        # 'spinner>=1.1.0',
-        # 'click-shell>=3.0.0'
+        # 'spinner',
+        # 'click-shell'
     ],
     dependency_links=[
-        # 'git+git://github.com/SilentFrogNet/spinner.git@9776491a37788744a36a5a97da7e842287390411',
-        # 'git+git://github.com/SilentFrogNet/click-shell.git',
+        # 'git+https://github.com/SilentFrogNet/spinner.git#egg=spinner',
+        # 'git+https://github.com/SilentFrogNet/click-shell.git#egg=click-shell',
     ],
     entry_points='''
         [console_scripts]
