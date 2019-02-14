@@ -12,6 +12,7 @@ pip install --quiet --upgrade pip
 pip install --quiet pycryptodome
 pip install --quiet pylint
 pip install --quiet pytest
+pip install --quiet pytest-cov
 pip install --quiet -e $WORKSPACE/  # where your setup.py lives
-py.test --verbose --junit-xml test-reports/results.xml mercurius/tests
+py.test --verbose --cov=mercurius --cov-report=xml test-reports/coverage-results.xml --junit-xml test-reports/results.xml mercurius/tests
 pylint -f parseable --exit-zero mercurius/ | tee test-reports/pylint.out
