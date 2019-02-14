@@ -19,6 +19,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'pip install .'
                 sh 'py.test --verbose --junit-xml test-reports/results.xml mercurius/tests'
             }
             post {
