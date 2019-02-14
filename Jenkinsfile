@@ -24,6 +24,7 @@ pipeline {
             post {
                 always {
                     junit 'test-reports/results.xml'
+                    junit 'test-reports/pylint.out'
                 }
             }
         }
