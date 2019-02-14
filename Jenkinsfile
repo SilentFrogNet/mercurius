@@ -8,6 +8,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'jenkins/setup_env.sh'
                 sh 'python -m py_compile app.py' 
                 sh 'python -m compileall mercurius'
             }
@@ -19,7 +20,6 @@ pipeline {
                 }
             }
             steps {
-                sh 'pip install .'
                 sh 'py.test --verbose --junit-xml test-reports/results.xml mercurius/tests'
             }
             post {
