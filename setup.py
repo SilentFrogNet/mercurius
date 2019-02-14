@@ -43,8 +43,8 @@ setuptools.setup(
     ],
     install_requires=[
         'Click',
-        # 'termcolor',
-        # 'colorama',
+        'termcolor',
+        'colorama',
         'configobj',
         'pdfminer.six',
         'hachoir3',
