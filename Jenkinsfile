@@ -40,5 +40,20 @@ pipeline {
                 }
             }
         }
+        stage('Deliver') { 
+            agent {
+                docker {
+                    image 'cdrx/pyinstaller-linux:python3' 
+                }
+            }
+            steps {
+                sh 'pyinstaller --onefile --noconfirm --name mercurius app.py' 
+            }
+            post {
+                success {
+                    archiveArtifacts 'dist/mercurius' 
+                }
+            }
+        }
     }
 }
