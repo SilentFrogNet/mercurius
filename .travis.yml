@@ -9,8 +9,8 @@ python:
 
 # command to install
 install:
-  - pip install .
-  - pip install pytest-cov codecov pylint
+  - pip install --quiet .
+  - pip install --quiet pytest-cov codecov pylint
 
 # command to run tests
 # script:
