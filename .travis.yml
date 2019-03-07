@@ -12,19 +12,14 @@ install:
   - pip install --quiet .
   - pip install --quiet pytest-cov codecov pylint
 
-# command to run tests
-# script:
-#   - py.test --cov=mercurius --cov-report term mercurius/tests
-#   # - pylint -f parseable --exit-zero mercurius/ --errors-only
-
-
-# TODO: change above to
 # command to run stages
 jobs:
   include:
     - stage: "Tests"
+      name: "PyLint"
+      script: ./travis/pylint.sh
+    - script: ./travis/unit-tests.sh 
       name: "Unit Tests"
-      script: ./travis/unit-tests.sh
 #     - script: ./travis/integration-tests.sh
 #       name: "Integration Tests"
 #     - stage: deploy

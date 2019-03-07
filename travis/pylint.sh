@@ -1,0 +1,1 @@
+pylint -f parseable --exit-zero mercurius/ --errors-only
