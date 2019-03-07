@@ -1,8 +1,9 @@
-[![GitHub tag](https://img.shields.io/github/tag/SilentFrogNet/mercurius.svg?label=version)](https://github.com/SilentFrogNet/mercurius/releases)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/mercurius)
 [![Travis build](https://travis-ci.org/SilentFrogNet/mercurius.svg?branch=master)](https://travis-ci.org/SilentFrogNet/mercurius/builds)
+[![codecov](https://codecov.io/gh/SilentFrogNet/mercurius/branch/master/graph/badge.svg)](https://codecov.io/gh/SilentFrogNet/mercurius)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/mercurius)
 [![GitHub license](https://img.shields.io/github/license/SilentFrogNet/mercurius.svg)](https://github.com/SilentFrogNet/mercurius/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/SilentFrogNet/mercurius.svg?colorB=yellow)](https://github.com/SilentFrogNet/mercurius/issues)
+<!-- [![GitHub tag](https://img.shields.io/github/tag/SilentFrogNet/mercurius.svg?label=version)](https://github.com/SilentFrogNet/mercurius/releases) -->
 
 
 ###################
