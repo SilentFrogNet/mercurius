@@ -1,1 +1,18 @@
+branches:
+  only:
+  - master
+
 language: python
+python:
+  - "3.6"
+
+# command to install
+install:
+  - pip install .
+
+# after_install:
+#   - pip install pytest-cov
+
+# command to run tests
+script:
+  - pytest
