@@ -13,20 +13,18 @@ install:
   - pip install pytest-cov codecov pylint
 
 # command to run tests
-script:
-  - py.test --cov=mercurius --cov-report term mercurius/tests
-  # - pylint -f parseable --exit-zero mercurius/ --errors-only
+# script:
+#   - py.test --cov=mercurius --cov-report term mercurius/tests
+#   # - pylint -f parseable --exit-zero mercurius/ --errors-only
 
-after_success:
-  - codecov
 
 # TODO: change above to
 # command to run stages
-# jobs:
-#   include:
-#     - stage: "Tests"
-#       name: "Unit Tests"
-#       script: ./travis/unit-tests.sh
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+      script: ./travis/unit-tests.sh
 #     - script: ./travis/integration-tests.sh
 #       name: "Integration Tests"
 #     - stage: deploy
@@ -38,3 +36,6 @@ after_success:
 #   - test
 #   - name: deploy
 #     if: branch = master
+
+after_success:
+  - codecov

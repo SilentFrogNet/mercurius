@@ -1,0 +1,1 @@
+py.test --cov=mercurius --cov-report term mercurius/tests
