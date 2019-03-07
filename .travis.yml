@@ -1,6 +1,7 @@
 branches:
   only:
   - master
+  - devel
 
 language: python
 python:
@@ -9,10 +10,31 @@ python:
 # command to install
 install:
   - pip install .
-
-# after_install:
-#   - pip install pytest-cov
+  - pip install pytest-cov codecov pylint
 
 # command to run tests
 script:
-  - pytest
+  - py.test --cov=mercurius --cov-report term mercurius/tests
+  # - pylint -f parseable --exit-zero mercurius/ --errors-only
+
+after_success:
+  - codecov
+
+# TODO: change above to
+# command to run stages
+# jobs:
+#   include:
+#     - stage: "Tests"
+#       name: "Unit Tests"
+#       script: ./travis/unit-tests.sh
+#     - script: ./travis/integration-tests.sh
+#       name: "Integration Tests"
+#     - stage: deploy
+#       name: "Deploy"
+#       script: ./travis/deploy.sh
+
+# stages:
+#   - compile
+#   - test
+#   - name: deploy
+#     if: branch = master

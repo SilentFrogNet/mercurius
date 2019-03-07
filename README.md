@@ -1,6 +1,6 @@
 [![GitHub tag](https://img.shields.io/github/tag/SilentFrogNet/mercurius.svg?label=version)](https://github.com/SilentFrogNet/mercurius/releases)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/SilentFrogNet/mercurius)
-[![Travis build](https://travis-ci.org/SilentFrogNet/mercurius.svg?branch=master)](https://github.com/SilentFrogNet/mercurius)
+[![Travis build](https://travis-ci.org/SilentFrogNet/mercurius.svg?branch=master)](https://travis-ci.org/SilentFrogNet/mercurius/builds)
 [![GitHub license](https://img.shields.io/github/license/SilentFrogNet/mercurius.svg)](https://github.com/SilentFrogNet/mercurius/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/SilentFrogNet/mercurius.svg?colorB=yellow)](https://github.com/SilentFrogNet/mercurius/issues)
 
@@ -68,7 +68,7 @@ Those are the available extractors:
   
 The tool implements a plugin architecture though [pluggy system](https://pluggy.readthedocs.io/en/latest/).
 
-To enable a new plugin it must be put in the `mercurius/extractors` folder and the enabled through the configuration file with an entry like `<plugin_file_name>=<class_extractor_name>`.
+To enable a new plugin it must be put in the `mercurius/extractors` folder and then enabled through the configuration file with an entry like `<plugin_file_name>=<class_extractor_name>`.
   
   
 ## Quick start
